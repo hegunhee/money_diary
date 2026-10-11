@@ -4,7 +4,6 @@
     "app_subtitle": "Pocket Ledger",
     "retry": "Try again",
     "load_failed": "Couldn't load your ledger.",
-    "coming_soon": "This screen is coming soon.",
     "won": "₩{}",
     "year_month": "{month}/{year}",
     "month_day": "{month}/{day}",
@@ -84,11 +83,6 @@
       "income": "Add income",
       "transfer": "Add transfer"
     },
-    "project_active": "Active",
-    "project_used": "Used {}",
-    "project_remaining": "Left {}",
-    "project_over": "Over by {}",
-    "project_daily": "Per day {}",
     "recent_title": "Recent activity",
     "see_all": "See all",
     "empty_title": "No records yet",
@@ -221,6 +215,26 @@
     "asset_delete": "Delete this account",
     "asset_delete_confirm": "Delete '{}'? This can't be undone.",
     "asset_in_use": "This account has records, so it can't be deleted.",
+    "save_failed": "Couldn't save. Please try again."
+  },
+  "project": {
+    "active": "Active",
+    "used": "Used {}",
+    "remaining": "Left {}",
+    "over": "Over by {}",
+    "daily": "Per day {}",
+    "ended": "Ended",
+    "title_active": "Active",
+    "title_archived": "Archived",
+    "add": "Add project",
+    "edit": "Edit project",
+    "name": "Name",
+    "budget": "Budget",
+    "period": "Period",
+    "name_required": "Enter a name.",
+    "delete": "Delete this project",
+    "delete_confirm": "Delete '{}'? Its records stay, only the tag is removed.",
+    "empty": "No projects yet. Create one for a trip or a move to track its budget.",
     "save_failed": "Couldn't save. Please try again."
   }
 }

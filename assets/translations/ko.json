@@ -4,7 +4,6 @@
     "app_subtitle": "Pocket Ledger",
     "retry": "다시 시도",
     "load_failed": "가계부를 불러오지 못했어요.",
-    "coming_soon": "준비 중인 화면이에요.",
     "won": "{}원",
     "year_month": "{year}년 {month}월",
     "month_day": "{month}월 {day}일",
@@ -84,11 +83,6 @@
       "income": "수입 입력",
       "transfer": "이체 기록"
     },
-    "project_active": "진행중",
-    "project_used": "누적 사용 {}",
-    "project_remaining": "남은 예산 {}",
-    "project_over": "예산 초과 {}",
-    "project_daily": "일일 권장 {}",
     "recent_title": "최근 가계부 내역",
     "see_all": "전체보기",
     "empty_title": "아직 기록이 없어요",
@@ -221,6 +215,26 @@
     "asset_delete": "이 자산 삭제",
     "asset_delete_confirm": "'{}' 자산을 지울까요? 되돌릴 수 없어요.",
     "asset_in_use": "이 자산을 쓴 거래가 있어 지울 수 없어요.",
+    "save_failed": "저장하지 못했어요. 다시 시도해 주세요."
+  },
+  "project": {
+    "active": "진행중",
+    "used": "누적 사용 {}",
+    "remaining": "남은 예산 {}",
+    "over": "예산 초과 {}",
+    "daily": "일일 권장 {}",
+    "ended": "종료",
+    "title_active": "진행 중",
+    "title_archived": "보관됨",
+    "add": "프로젝트 추가",
+    "edit": "프로젝트 수정",
+    "name": "이름",
+    "budget": "예산",
+    "period": "기간",
+    "name_required": "이름을 입력해 주세요.",
+    "delete": "이 프로젝트 삭제",
+    "delete_confirm": "'{}' 프로젝트를 지울까요? 묶여 있던 거래는 남고 태그만 떼어집니다.",
+    "empty": "아직 프로젝트가 없어요. 여행이나 이사처럼 따로 챙길 예산을 만들어 보세요.",
     "save_failed": "저장하지 못했어요. 다시 시도해 주세요."
   }
 }

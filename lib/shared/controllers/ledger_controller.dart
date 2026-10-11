@@ -4,6 +4,7 @@ import 'package:money_diary/shared/controllers/today_controller.dart';
 import 'package:money_diary/shared/models/asset_account.dart';
 import 'package:money_diary/shared/models/ledger_book.dart';
 import 'package:money_diary/shared/models/ledger_entry.dart';
+import 'package:money_diary/shared/models/project.dart';
 import 'package:money_diary/shared/repositories/ledger_repository.dart';
 import 'package:money_diary/shared/util/ledger_calculator.dart';
 import 'package:money_diary/shared/util/sample_ledger.dart';
@@ -58,6 +59,34 @@ class LedgerController extends AsyncNotifier<LedgerBook> {
       book.copyWith(assets: [...book.assets.where((a) => a.id != id)]),
     );
     return true;
+  }
+
+  /// 프로젝트를 더하거나 고칩니다.
+  Future<void> saveProject(Project project) async {
+    final book = await future;
+    await ref.read(ledgerRepositoryProvider).saveProject(project);
+    state = AsyncData(
+      book.copyWith(projects: _upsert(book.projects, project, (p) => p.id)),
+    );
+  }
+
+  /// 프로젝트를 지웁니다. 묶여 있던 거래는 남기고 태그만 뗍니다.
+  Future<void> deleteProject(String id) async {
+    final book = await future;
+    final untagged = [
+      for (final entry in book.entries)
+        if (entry.projectId == id) entry.withoutProject(),
+    ];
+    await ref.read(ledgerRepositoryProvider).deleteProject(id, untagged);
+    state = AsyncData(
+      book.copyWith(
+        entries: [
+          for (final entry in book.entries)
+            entry.projectId == id ? entry.withoutProject() : entry,
+        ],
+        projects: [...book.projects.where((p) => p.id != id)],
+      ),
+    );
   }
 
   /// 한 달 지출 예산을 바꿉니다.

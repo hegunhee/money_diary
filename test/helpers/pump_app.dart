@@ -47,7 +47,7 @@ class FakeLedgerRepository implements LedgerRepository {
   Future<void> saveProject(Project project) async {}
 
   @override
-  Future<void> deleteProject(String id) async {}
+  Future<void> deleteProject(String id, List<LedgerEntry> untagged) async {}
 
   @override
   Future<void> saveMonthlyBudget(int budget) async {}

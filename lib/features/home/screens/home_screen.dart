@@ -5,7 +5,6 @@ import 'package:money_diary/core/themes/app_spacing.dart';
 import 'package:money_diary/features/entry/screens/entry_screen.dart';
 import 'package:money_diary/features/home/widgets/monthly_status_card.dart';
 import 'package:money_diary/features/home/widgets/net_worth_card.dart';
-import 'package:money_diary/features/home/widgets/project_card.dart';
 import 'package:money_diary/features/home/widgets/quick_action_row.dart';
 import 'package:money_diary/features/home/widgets/recent_entries_section.dart';
 import 'package:money_diary/shared/controllers/ledger_controller.dart';
@@ -16,6 +15,7 @@ import 'package:money_diary/shared/widgets/app_content_width.dart';
 import 'package:money_diary/shared/widgets/app_error_view.dart';
 import 'package:money_diary/shared/widgets/app_top_bar.dart';
 import 'package:money_diary/shared/widgets/month_selector.dart';
+import 'package:money_diary/shared/widgets/project_card.dart';
 
 /// 홈 대시보드 — 순자산, 이번 달 현황, 진행 중인 프로젝트, 최근 거래
 class HomeScreen extends ConsumerWidget {
@@ -80,6 +80,9 @@ class HomeScreen extends ConsumerWidget {
                     project: project,
                     spent: projectSpent(book.entries, project.id),
                     today: today,
+                    onTap: () => ref
+                        .read(mainTabProvider.notifier)
+                        .select(MainTab.projects),
                   ),
                 ],
                 const SizedBox(height: AppSpacing.sm),

@@ -122,6 +122,21 @@ class LedgerEntry {
   /// 매달 반복되는 거래인지 여부
   final bool isRecurring;
 
+  /// 프로젝트 태그를 뗀 거래
+  LedgerEntry withoutProject() => LedgerEntry(
+    id: id,
+    type: type,
+    amount: amount,
+    title: title,
+    occurredAt: occurredAt,
+    assetId: assetId,
+    toAssetId: toAssetId,
+    category: category,
+    detail: detail,
+    memo: memo,
+    isRecurring: isRecurring,
+  );
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'type': type.name,

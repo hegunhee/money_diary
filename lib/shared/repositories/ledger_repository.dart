@@ -84,8 +84,11 @@ class LedgerRepository {
     await (await _box(_projects)).put(project.id, project.toJson());
   }
 
-  /// 프로젝트 하나를 지웁니다.
-  Future<void> deleteProject(String id) async {
+  /// 프로젝트 하나를 지우고, 태그를 뗀 거래들을 함께 저장합니다.
+  Future<void> deleteProject(String id, List<LedgerEntry> untagged) async {
+    await (await _box(_entries)).putAll({
+      for (final entry in untagged) entry.id: entry.toJson(),
+    });
     await (await _box(_projects)).delete(id);
   }
 
