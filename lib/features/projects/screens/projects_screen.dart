@@ -33,6 +33,29 @@ class ProjectsScreen extends ConsumerWidget {
       child: ProjectEditSheet(project: project),
     );
 
+    Future<void> delete(Project project) async {
+      final confirmed = await confirmDelete(
+        context,
+        message: 'project.delete_confirm'.tr(args: [project.name]),
+        confirmLabel: 'common.delete'.tr(),
+        cancelLabel: 'common.cancel'.tr(),
+      );
+      if (!confirmed) {
+        return;
+      }
+      try {
+        await ref.read(ledgerProvider.notifier).deleteProject(project.id);
+      } on Object {
+        if (context.mounted) {
+          await showNotice(
+            context,
+            message: 'common.delete_failed'.tr(),
+            closeLabel: 'common.close'.tr(),
+          );
+        }
+      }
+    }
+
     return Scaffold(
       appBar: AppTopBar(section: 'nav.projects'.tr()),
       floatingActionButton: FloatingActionButton.extended(
@@ -101,6 +124,7 @@ class ProjectsScreen extends ConsumerWidget {
                           spent: projectSpent(book.entries, project.id),
                           today: today,
                           onTap: () => edit(project),
+                          onLongPress: () => delete(project),
                         ),
                       ),
                   ],

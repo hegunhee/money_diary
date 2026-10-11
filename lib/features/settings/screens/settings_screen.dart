@@ -34,6 +34,34 @@ class SettingsScreen extends ConsumerWidget {
       child: AssetEditSheet(asset: asset),
     );
 
+    Future<void> deleteAsset(AssetAccount asset) async {
+      final confirmed = await confirmDelete(
+        context,
+        message: 'settings.asset_delete_confirm'.tr(args: [asset.name]),
+        confirmLabel: 'common.delete'.tr(),
+        cancelLabel: 'common.cancel'.tr(),
+      );
+      if (!confirmed) {
+        return;
+      }
+      var message = 'common.delete_failed'.tr();
+      try {
+        if (await ref.read(ledgerProvider.notifier).deleteAsset(asset.id)) {
+          return;
+        }
+        message = 'settings.asset_in_use'.tr();
+      } on Object {
+        // 아래에서 실패를 알립니다.
+      }
+      if (context.mounted) {
+        await showNotice(
+          context,
+          message: message,
+          closeLabel: 'common.close'.tr(),
+        );
+      }
+    }
+
     return Scaffold(
       appBar: AppTopBar(section: 'nav.settings'.tr()),
       body: ledger.when(
@@ -144,6 +172,7 @@ class SettingsScreen extends ConsumerWidget {
                           ),
                         AppTapRow(
                           onTap: () => editAsset(asset),
+                          onLongPress: () => deleteAsset(asset),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: AppSpacing.lg,

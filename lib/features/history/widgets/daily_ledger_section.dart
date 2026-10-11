@@ -18,6 +18,7 @@ class DailyLedgerSection extends StatelessWidget {
     required this.day,
     required this.book,
     required this.onEntryTap,
+    required this.onEntryLongPress,
     super.key,
   });
 
@@ -27,6 +28,9 @@ class DailyLedgerSection extends StatelessWidget {
 
   /// 거래 줄을 눌렀을 때의 동작
   final ValueChanged<LedgerEntry> onEntryTap;
+
+  /// 거래 줄을 꾹 눌렀을 때의 동작
+  final ValueChanged<LedgerEntry> onEntryLongPress;
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +90,7 @@ class DailyLedgerSection extends StatelessWidget {
                     entry: entry,
                     book: book,
                     onTap: () => onEntryTap(entry),
+                    onLongPress: () => onEntryLongPress(entry),
                   ),
                 ),
               ],

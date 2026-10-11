@@ -13,12 +13,16 @@ class AppTapRow extends StatelessWidget {
   const AppTapRow({
     required this.onTap,
     required this.child,
+    this.onLongPress,
     this.borderRadius,
     super.key,
   });
 
   /// 탭 콜백. null이면 누름 표현도 하지 않습니다.
   final VoidCallback? onTap;
+
+  /// 꾹 눌렀을 때의 동작 (선택)
+  final VoidCallback? onLongPress;
 
   /// 줄의 내용
   final Widget child;
@@ -31,6 +35,7 @@ class AppTapRow extends StatelessWidget {
     type: MaterialType.transparency,
     child: InkWell(
       onTap: onTap,
+      onLongPress: onLongPress,
       borderRadius: borderRadius,
       splashFactory: NoSplash.splashFactory,
       highlightColor: context.colors.surfaceHigh,

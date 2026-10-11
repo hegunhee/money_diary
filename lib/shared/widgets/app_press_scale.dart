@@ -9,12 +9,16 @@ class AppPressScale extends HookWidget {
   const AppPressScale({
     required this.onTap,
     required this.child,
+    this.onLongPress,
     this.behavior,
     super.key,
   });
 
   /// 탭 콜백. null이면 눌림 표현도 하지 않습니다.
   final VoidCallback? onTap;
+
+  /// 꾹 눌렀을 때의 동작 (선택)
+  final VoidCallback? onLongPress;
 
   /// 눌리는 대상
   final Widget child;
@@ -32,6 +36,7 @@ class AppPressScale extends HookWidget {
     return GestureDetector(
       behavior: behavior,
       onTap: onTap,
+      onLongPress: onLongPress,
       onTapDown: enabled ? (_) => pressed.value = true : null,
       onTapUp: enabled ? (_) => pressed.value = false : null,
       onTapCancel: enabled ? () => pressed.value = false : null,
