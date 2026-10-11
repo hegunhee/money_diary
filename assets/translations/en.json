@@ -182,7 +182,8 @@
     "category_name": "Category name",
     "category_name_required": "Enter a name.",
     "category_duplicate": "That category already exists.",
-    "category_delete_confirm": "Delete '{}'? Records in this category stay as they are."
+    "category_delete_confirm": "Delete '{}'? Records in this category stay as they are.",
+    "transfer_need_asset": "A transfer needs a second account to receive the money. Add an account or card first."
   },
   "report": {
     "net_saving": "Net savings this month",
