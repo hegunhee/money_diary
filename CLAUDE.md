@@ -6,7 +6,7 @@ Claude Code(claude.ai/code)가 이 레포에서 작업할 때 따르는 가이�
 
 **포켓가계부(Pocket Ledger)** — 수입·지출·이체를 기록하는 가계부 앱(iOS · Android).
 Flutter 단일 모듈이며 패키지 이름은 `money_diary` 입니다. **서버 없이 기기의 로컬 DB**에
-저장합니다.
+저장합니다(hive_ce).
 
 - **Flutter 3.41.9**. 로컬은 FVM(`.fvmrc`), CI는 `subosito/flutter-action` 의
   `flutter-version`. 버전을 올릴 땐 `.fvmrc` 와 모든 워크플로의 `flutter-version` 을 함께 수정.
@@ -25,6 +25,8 @@ lib/
 ├── core/                 # 의존성 없이 앱 전체 적용되는 leaf 코드
 │   └── themes/           # AppPalette · AppColors · AppTypography · AppSpacing · AppRadius · AppLayout · AppTheme
 ├── shared/               # 여러 feature에서 중복되는 컴포넌트·코드
+│   ├── models/ · repositories/ · controllers/  # 여러 feature가 쓰는 모델·로컬 DB·상태
+│   ├── util/             # 계산 · 표기 순수 함수
 │   └── widgets/          # 공용 UI
 └── features/<feature>/
     ├── models/           # 데이터 모델
