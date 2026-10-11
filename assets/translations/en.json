@@ -90,5 +90,27 @@
     "see_all": "See all",
     "empty_title": "No records yet",
     "empty_description": "Your spending will show up here once you add it."
+  },
+  "history": {
+    "income": "Income",
+    "expense": "Expenses",
+    "balance": "Balance",
+    "budget_usage": "Budget used {}",
+    "budget_left": "Budget left {}",
+    "budget_over": "Over budget {}",
+    "filter": {
+      "all": "All",
+      "expense": "Expenses",
+      "income": "Income",
+      "transfer": "Transfers",
+      "project": "Projects"
+    },
+    "sort_newest": "Newest first",
+    "sort_oldest": "Oldest first",
+    "count": "{} records",
+    "transfer_count": "({} transfers)",
+    "empty": "No records match this filter.",
+    "streak_title": "{}-day recording streak!",
+    "streak_description": "The more you record, the clearer your spending gets."
   }
 }

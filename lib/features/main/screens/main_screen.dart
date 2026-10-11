@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money_diary/core/themes/app_colors.dart';
 import 'package:money_diary/core/themes/app_typography.dart';
+import 'package:money_diary/features/history/screens/history_screen.dart';
 import 'package:money_diary/features/home/screens/home_screen.dart';
 import 'package:money_diary/shared/controllers/main_tab_controller.dart';
 import 'package:money_diary/shared/widgets/app_bottom_navigation.dart';
@@ -22,6 +23,7 @@ class MainScreen extends ConsumerWidget {
           for (final tab in MainTab.values)
             switch (tab) {
               MainTab.home => const HomeScreen(),
+              MainTab.history => const HistoryScreen(),
               _ => _ComingSoonScreen(tab),
             },
         ],
