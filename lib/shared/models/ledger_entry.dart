@@ -1,3 +1,5 @@
+import 'package:money_diary/shared/models/ledger_category.dart';
+
 /// 거래의 종류
 enum EntryType {
   /// 지출
@@ -8,51 +10,6 @@ enum EntryType {
 
   /// 이체 — 자산 간 이동이라 수입·지출 통계에 넣지 않습니다.
   transfer,
-}
-
-/// 거래 카테고리
-enum LedgerCategory {
-  /// 식비
-  food,
-
-  /// 주거/통신
-  housing,
-
-  /// 교통/차량
-  transport,
-
-  /// 쇼핑/생활
-  shopping,
-
-  /// 여가/문화
-  culture,
-
-  /// 의료
-  medical,
-
-  /// 기타 지출
-  etc,
-
-  /// 급여
-  salary,
-
-  /// 급여 외 수입
-  otherIncome
-  ;
-
-  /// 지출 입력에서 고를 수 있는 카테고리
-  static const List<LedgerCategory> expenseValues = [
-    food,
-    transport,
-    shopping,
-    housing,
-    medical,
-    culture,
-    etc,
-  ];
-
-  /// 수입 입력에서 고를 수 있는 카테고리
-  static const List<LedgerCategory> incomeValues = [salary, otherIncome];
 }
 
 /// 가계부의 거래 한 건
@@ -82,7 +39,11 @@ class LedgerEntry {
     toAssetId: json['toAssetId'] as String?,
     category: json['category'] == null
         ? null
-        : LedgerCategory.values.byName(json['category'] as String),
+        : LedgerCategory.restore(
+            id: json['category'] as String,
+            type: EntryType.values.byName(json['type'] as String),
+            name: json['categoryName'] as String?,
+          ),
     detail: json['detail'] as String?,
     projectId: json['projectId'] as String?,
     memo: json['memo'] as String?,
@@ -145,7 +106,8 @@ class LedgerEntry {
     'occurredAt': occurredAt.toIso8601String(),
     'assetId': assetId,
     'toAssetId': toAssetId,
-    'category': category?.name,
+    'category': category?.id,
+    'categoryName': category?.customName,
     'detail': detail,
     'projectId': projectId,
     'memo': memo,

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:money_diary/shared/models/ledger_category.dart';
 import 'package:money_diary/shared/models/ledger_entry.dart';
 import 'package:money_diary/shared/repositories/ledger_repository.dart';
 import 'package:money_diary/shared/util/ledger_calculator.dart';
@@ -34,7 +35,12 @@ void main() {
       title: '점심',
       occurredAt: DateTime(2026, 3, 18, 15, 30),
       assetId: 'kakao-bank',
-      category: LedgerCategory.food,
+      // 사용자가 더한 카테고리. 목록에서 지워져도 거래에는 이름이 남아야 합니다.
+      category: const LedgerCategory(
+        id: 'custom-pet',
+        type: EntryType.expense,
+        customName: '반려동물',
+      ),
       projectId: 'japan-trip',
       memo: '친구들과 점심 식사',
     );
@@ -47,6 +53,8 @@ void main() {
     expect(await LedgerRepository().isInitialized(), isTrue);
     expect(book.entries, hasLength(sample.entries.length + 1));
     expect(saved.toJson(), added.toJson());
+    expect(saved.category?.customName, '반려동물');
+    expect(book.categories, isEmpty);
     expect(book.assetById('kakao-bank')!.balance, 1500000 - 35000);
     expect(book.projects.single.budget, 1500000);
     expect(book.monthlyBudget, 4000000);

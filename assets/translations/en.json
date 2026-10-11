@@ -172,7 +172,17 @@
     },
     "asset_empty": "Add an account in Settings first.",
     "title_edit": "Edit record",
-    "delete_confirm": "Delete this record? Account balances will be restored too."
+    "delete_confirm": "Delete this record? Account balances will be restored too.",
+    "category_add": "Add",
+    "category_add_title": {
+      "expense": "Add expense category",
+      "income": "Add income category",
+      "transfer": "Add category"
+    },
+    "category_name": "Category name",
+    "category_name_required": "Enter a name.",
+    "category_duplicate": "That category already exists.",
+    "category_delete_confirm": "Delete '{}'? Records in this category stay as they are."
   },
   "report": {
     "net_saving": "Net savings this month",

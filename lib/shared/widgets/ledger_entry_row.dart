@@ -4,6 +4,7 @@ import 'package:money_diary/core/themes/app_colors.dart';
 import 'package:money_diary/core/themes/app_spacing.dart';
 import 'package:money_diary/core/themes/app_typography.dart';
 import 'package:money_diary/shared/models/ledger_book.dart';
+import 'package:money_diary/shared/models/ledger_category.dart';
 import 'package:money_diary/shared/models/ledger_entry.dart';
 import 'package:money_diary/shared/util/ledger_labels.dart';
 import 'package:money_diary/shared/widgets/app_badge.dart';

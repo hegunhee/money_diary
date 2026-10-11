@@ -12,7 +12,7 @@ lib/
 ├── core/                 # 의존성 없이 앱 전체에 적용되는 leaf 코드
 │   └── themes/           # app_palette · app_colors · app_typography · app_spacing · app_layout · app_theme
 ├── shared/               # 여러 feature에서 중복되는 컴포넌트·코드
-│   ├── models/           # 가계부 모델 (LedgerEntry · AssetAccount · Project · LedgerBook)
+│   ├── models/           # 가계부 모델 (LedgerEntry · LedgerCategory · AssetAccount · Project · LedgerBook)
 │   ├── repositories/     # 로컬 DB(Hive) 읽기·쓰기 (ledger_repository)
 │   ├── controllers/      # 여러 화면이 쓰는 상태 (가계부 · 보는 달 · 하단 탭)
 │   ├── util/             # 계산(ledger_calculator) · 표기(ledger_labels · won_format) · 금액 입력(won_input)
@@ -37,6 +37,9 @@ lib/
 - `LedgerRepository` 만 Hive 를 압니다. 화면 테스트는 `test/helpers/pump_app.dart` 의
   `FakeLedgerRepository` 로 바꿔 끼웁니다.
 - 거래를 더하면 `applyEntry` 가 자산 잔액을 함께 고쳐 저장합니다.
+- 카테고리는 기본 카테고리(코드의 상수, 이름은 번역 파일)와 사용자가 더한 카테고리(로컬 DB)로
+  나뉩니다. 거래에는 카테고리 id와 이름을 함께 저장해, 더한 카테고리를 지워도 그 거래의
+  카테고리는 그대로 보입니다.
 - 앱은 **빈 가계부(순자산 0원)**로 시작합니다. 처음 실행하면 거래를 바로 적을 수 있게 잔액
   0원인 현금 자산 하나만 만들고, 나머지 자산·예산·프로젝트는 사용자가 더합니다.
 - 시안의 예시 가계부는 테스트 전용입니다(`test/helpers/sample_ledger.dart`).
