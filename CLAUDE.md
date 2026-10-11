@@ -144,6 +144,22 @@ git ls-files '*.dart' | xargs fvm dart format --output=none --set-exit-if-change
 - `dart fix --apply` 같은 일괄 수정 뒤에는 `git status` 로 의도하지 않은 파일(`pubspec.yaml`
   등)을 확인하고 되돌립니다.
 
+## CI (`.github/workflows/`)
+
+커밋을 푸시할 때마다 네 가지가 돕니다. 모두 푸시된 커밋을 기준으로 검사하므로, PR 을 머지하며
+브랜치를 지워도 영향이 없습니다.
+
+| 워크플로 | 하는 일 | 로컬에서 같은 검사 |
+|---|---|---|
+| 포맷 검사 (`format-test.yml`) | 포맷이 어긋난 `.dart` 파일이 있으면 실패 | `git ls-files '*.dart' \| xargs fvm dart format --output=none --set-exit-if-changed` |
+| 린트 검사하기 (`lint-test.yml`) | `flutter analyze --no-fatal-infos` | `fvm flutter analyze` |
+| 유닛 테스트 (`unit-test.yml`) | `flutter test --coverage` | `fvm flutter test` |
+| 빌드 테스트 (`build-test.yml`) | Android APK 빌드 | `fvm flutter build apk` |
+
+- 포맷 검사는 **고쳐서 대신 커밋해 주지 않습니다.** 실패하면 로컬에서 `fvm dart format` 을 돌려
+  다시 푸시합니다.
+- Flutter 버전을 올릴 땐 `.fvmrc` 와 네 워크플로의 `flutter-version` 을 함께 고칩니다.
+
 ## 커밋·PR 규약
 
 - 커밋·PR 제목은 **한국어 문장**. 영어 `feat:`/`fix:` 프리픽스 사용 금지.

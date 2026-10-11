@@ -1,50 +1,30 @@
-# Flutter 코드 자동 포맷 워크플로우
-name: 포매터 실행
+# Dart 포맷 검사 워크플로우
+#
+# 포맷이 어긋난 파일이 있으면 실패합니다. 고쳐서 대신 커밋해 주지는 않습니다.
+# 예전에는 PR 브랜치를 이름으로 체크아웃해 포맷한 뒤 그 브랜치에 푸시했는데,
+# PR 을 머지하며 브랜치를 지우면 체크아웃할 브랜치가 없어 매번 실패했습니다.
+# 푸시된 커밋을 기준으로 검사하면 브랜치가 지워져도 영향이 없습니다.
+name: 포맷 검사
 
-# PR이 생성되거나 업데이트 될 때 워크플로우 실행
-on: [pull_request]
-
-# GitHub Actions에 필요한 권한 설정
-permissions:
-  contents: write # GitHub Actions가 코드 변경을 푸시할 수 있도록 설정
+on: [push]
 
 jobs:
   flutter_format:
-    name: Flutter Format 실행
+    name: Dart 포맷 검사
     runs-on: ubuntu-latest
     steps:
-      # 리포지토리 코드 체크아웃
       - name: 리포지토리 체크아웃
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }} # GitHub 토큰으로 권한 설정
-          ref: ${{ github.head_ref }} # PR 브랜치 참조
 
-      # Flutter 개발 환경 설정
       - name: Flutter 설정
         uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.41.9"
 
-      # 프로젝트 의존성 패키지 설치
+      # 의존성을 받기 전에 포맷하면 analysis_options 를 읽지 못해 결과가 달라집니다.
       - name: 의존성 패키지 설치
         run: flutter pub get
 
-      # 코드 자동 포맷 실행
-      - name: 코드 포맷 실행
-        run: dart format .
-
-      # 포맷된 코드 커밋하고 푸시
-      - name: 변경 사항 커밋 및 푸시
-        run: |
-          # GitHub Actions 봇 사용자 설정
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-          git add .
-
-          # 변경 사항이 있으면 커밋하고 푸시
-          if ! git diff --staged --quiet; then
-            git commit -m "style: 자동 포맷된 코드"
-            git push origin HEAD:${{ github.head_ref }}
-          fi
+      # 빌드 산출물까지 긁지 않도록 git 이 추적하는 .dart 파일만 검사합니다.
+      - name: 포맷 검사
+        run: git ls-files '*.dart' | xargs dart format --output=none --set-exit-if-changed
