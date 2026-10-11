@@ -182,7 +182,8 @@
     "category_name": "카테고리 이름",
     "category_name_required": "이름을 입력해 주세요.",
     "category_duplicate": "이미 있는 카테고리예요.",
-    "category_delete_confirm": "'{}' 카테고리를 지울까요? 이 카테고리로 적은 내역은 그대로 남습니다."
+    "category_delete_confirm": "'{}' 카테고리를 지울까요? 이 카테고리로 적은 내역은 그대로 남습니다.",
+    "transfer_need_asset": "이체하려면 받는 자산이 하나 더 필요해요. 통장이나 카드를 먼저 더해 주세요."
   },
   "report": {
     "net_saving": "이번 달 순 저축액",

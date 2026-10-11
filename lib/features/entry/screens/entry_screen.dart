@@ -22,6 +22,7 @@ import 'package:money_diary/shared/widgets/app_content_width.dart';
 import 'package:money_diary/shared/widgets/app_fill_button.dart';
 import 'package:money_diary/shared/widgets/app_filter_chip.dart';
 import 'package:money_diary/shared/widgets/app_sheet.dart';
+import 'package:money_diary/shared/widgets/asset_edit_sheet.dart';
 import 'package:money_diary/shared/widgets/inline_error_text.dart';
 
 /// 거래 입력 — 지출·수입·이체 한 건을 적어 저장합니다. [entry]를 주면 그 거래를 고칩니다.
@@ -76,7 +77,14 @@ class EntryScreen extends HookConsumerWidget {
     final isTransfer = type.value == EntryType.transfer;
     final accent = entryTypeColor(colors, type.value);
     final asset = book.assetById(assetId.value) ?? book.assets.firstOrNull;
-    final toAsset = book.assetById(toAssetId.value);
+    // 보내는 자산과 같은 자산으로는 보낼 수 없어, 같으면 고르지 않은 것으로 봅니다.
+    final toAsset = toAssetId.value == asset?.id
+        ? null
+        : book.assetById(toAssetId.value);
+    final receivableAssets = [
+      for (final other in book.assets)
+        if (other.id != asset?.id) other,
+    ];
     final editingCategory = editing?.category;
     final categories = [
       ...book.categoriesOf(type.value),
@@ -86,7 +94,10 @@ class EntryScreen extends HookConsumerWidget {
           !book.categoriesOf(type.value).contains(editingCategory))
         editingCategory,
     ];
-    final selectedCategory = categories.contains(category.value)
+    // 이체에는 카테고리가 없습니다.
+    final selectedCategory = categories.isEmpty
+        ? null
+        : categories.contains(category.value)
         ? category.value
         : categories.first;
 
@@ -178,13 +189,14 @@ class EntryScreen extends HookConsumerWidget {
             ? name
             : isTransfer
             ? '${asset!.name} → ${toAsset!.name}'
-            : selectedCategory.label,
+            : selectedCategory?.label ?? '',
         occurredAt: occurredAt.value,
         assetId: asset!.id,
         toAssetId: isTransfer ? toAsset!.id : null,
         category: isTransfer ? null : selectedCategory,
         // 세부 분류는 이 화면에서 고치지 않으므로 카테고리가 그대로일 때만 남깁니다.
-        detail: !isTransfer && selectedCategory == editing?.category
+        detail:
+            selectedCategory != null && selectedCategory == editing?.category
             ? editing?.detail
             : null,
         projectId: isTransfer ? null : projectId.value,
@@ -357,11 +369,32 @@ class EntryScreen extends HookConsumerWidget {
                         color: colors.textSecondary,
                       ),
                     ),
-                    AssetPickerTile(
-                      assets: book.assets,
-                      selected: toAsset,
-                      onChanged: (value) => toAssetId.value = value.id,
-                    ),
+                    if (receivableAssets.isEmpty) ...[
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        'entry.transfer_need_asset'.tr(),
+                        style: AppTypography.bodyMd.copyWith(
+                          color: colors.textPrimary,
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton.icon(
+                          onPressed: () => showAppSheet<void>(
+                            context,
+                            title: 'settings.asset_add'.tr(),
+                            child: const AssetEditSheet(),
+                          ),
+                          icon: const Icon(Icons.add, size: 18),
+                          label: Text('settings.asset_add'.tr()),
+                        ),
+                      ),
+                    ] else
+                      AssetPickerTile(
+                        assets: receivableAssets,
+                        selected: toAsset,
+                        onChanged: (value) => toAssetId.value = value.id,
+                      ),
                     if (errors.value.contains(EntryFormError.toAsset))
                       InlineErrorText('entry.error.to_asset'.tr())
                     else if (errors.value.contains(EntryFormError.sameAsset))
