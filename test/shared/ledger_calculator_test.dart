@@ -2,7 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:money_diary/shared/models/asset_account.dart';
 import 'package:money_diary/shared/models/ledger_entry.dart';
 import 'package:money_diary/shared/util/ledger_calculator.dart';
-import 'package:money_diary/shared/util/sample_ledger.dart';
+
+import '../helpers/sample_ledger.dart';
 
 LedgerEntry _entry(EntryType type, int amount, {String to = 'bank'}) =>
     LedgerEntry(

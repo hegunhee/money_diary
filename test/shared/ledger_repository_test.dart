@@ -5,7 +5,8 @@ import 'package:hive_ce/hive.dart';
 import 'package:money_diary/shared/models/ledger_entry.dart';
 import 'package:money_diary/shared/repositories/ledger_repository.dart';
 import 'package:money_diary/shared/util/ledger_calculator.dart';
-import 'package:money_diary/shared/util/sample_ledger.dart';
+
+import '../helpers/sample_ledger.dart';
 
 void main() {
   late Directory directory;

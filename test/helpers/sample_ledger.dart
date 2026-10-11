@@ -6,7 +6,7 @@ import 'package:money_diary/shared/models/project.dart';
 /// 시안(`docs/design/screens`)에 그려진 예시 가계부를 만듭니다.
 ///
 /// [today]가 속한 달에 거래를 놓습니다. 시안은 2026-03-18 을 오늘로 그렸습니다.
-/// 자산·프로젝트·예산 관리 화면이 생기기 전까지 개발 빌드와 화면 테스트에서 씁니다.
+/// 테스트에서만 씁니다. 앱은 빈 가계부로 시작합니다.
 LedgerBook buildSampleLedger(DateTime today) {
   const hyundai = 'hyundai-card';
   const naverPay = 'naver-pay';

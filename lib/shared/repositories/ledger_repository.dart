@@ -37,7 +37,13 @@ class LedgerRepository {
     ];
     return LedgerBook(
       entries: rows(await _box(_entries)).map(LedgerEntry.fromJson).toList(),
-      assets: rows(await _box(_assets)).map(AssetAccount.fromJson).toList(),
+      // 상자는 id 순으로 돌려주므로, 종류별로 모아 이름순으로 보여 줍니다.
+      assets: rows(await _box(_assets)).map(AssetAccount.fromJson).toList()
+        ..sort(
+          (a, b) => a.kind == b.kind
+              ? a.name.compareTo(b.name)
+              : a.kind.index.compareTo(b.kind.index),
+        ),
       projects: rows(await _box(_projects)).map(Project.fromJson).toList(),
       monthlyBudget: settings.get(_monthlyBudget) as int? ?? 0,
     );
