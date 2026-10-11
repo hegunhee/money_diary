@@ -1,105 +1,43 @@
-# Blueberry Template
+# 포켓가계부 (Pocket Ledger)
 
-Flutter 프로젝트를 빠르게 시작할 수 있는 심플한 템플릿
+수입·지출·이체를 기록하는 가계부 Flutter 앱(iOS · Android)입니다. 서버 없이 기기의 로컬
+DB에 저장합니다.
 
-## ⚙️ Setup (설정)
+- Flutter 3.41.9 — 로컬은 FVM(`.fvmrc`), CI는 워크플로의 `flutter-version`
+- 상태관리 Riverpod 3 + flutter_hooks (`HookConsumerWidget`)
+- 다국어 easy_localization (`ko` 기본 · `en`)
 
-- **[Flutter 환경 설정](docs/setup/FLUTTER_SETUP.md)** - Flutter 개발 환경 구축
-  - [Windows](docs/setup/FLUTTER_SETUP_WINDOWS.md) | [macOS](docs/setup/FLUTTER_SETUP_MACOS.md) | [FVM](docs/setup/FLUTTER_SETUP_FVM.md) | [문제 해결](docs/setup/FLUTTER_TROUBLESHOOTING.md)
+내부 구조·디자인 시스템은 [ARCHITECTURE.md](ARCHITECTURE.md), 코딩 규약은
+[CLAUDE.md](CLAUDE.md), 디자인 시안은 [docs/design/](docs/design/)을 보세요.
 
-## 시작하기
-
-### FVM 사용 (권장)
-
-이 프로젝트는 FVM으로 Flutter 버전을 관리합니다 (v3.38.8).
+## 실행
 
 ```bash
-# FVM 설치 (처음 한 번만)
-dart pub global activate fvm
-
-# 프로젝트 Flutter 버전 설치
-fvm install
-
-# 의존성 설치
+fvm install                 # .fvmrc 버전 설치
 fvm flutter pub get
-
-# 앱 실행
 fvm flutter run
 ```
 
-## Flutter 유용한 커맨드
+## 자주 쓰는 명령
 
 ```bash
-# 패키지 추가
-fvm flutter pub add package_name
-
-# 코드 포맷팅
-fvm dart format .
-
-# 빌드 캐시 삭제
-fvm flutter clean
-
-# 빌드
-fvm flutter build apk                        # Android APK 빌드
-fvm flutter build appbundle                  # Android App Bundle 빌드
+fvm flutter analyze                 # 정적 분석
+fvm flutter test                    # 테스트
+fvm dart format .                   # 포맷
+fvm flutter pub add <package>       # 패키지 추가 (pubspec 직접 수정 금지)
+fvm flutter build apk               # Android 빌드
 ```
 
-## Git 유용한 커맨드
+## 환경 설정
 
-```bash
-# 직전 커밋 취소 (변경사항은 staged 상태로 유지)
-git reset --soft HEAD~1
+- Flutter·FVM 설치: [docs/setup/FLUTTER_SETUP.md](docs/setup/FLUTTER_SETUP.md)
+  ([Windows](docs/setup/FLUTTER_SETUP_WINDOWS.md) · [macOS](docs/setup/FLUTTER_SETUP_MACOS.md) ·
+  [FVM](docs/setup/FLUTTER_SETUP_FVM.md) · [문제 해결](docs/setup/FLUTTER_TROUBLESHOOTING.md))
+- Firebase: 아직 연결하지 않았습니다(`lib/setup.dart` 의 `enableFirebase = false`).
+  연결 방법은 [docs/setup/FIREBASE_SETUP.md](docs/setup/FIREBASE_SETUP.md).
+- Claude Code MCP: [docs/setup/CLAUDE_CODE_MCP_SETUP.md](docs/setup/CLAUDE_CODE_MCP_SETUP.md)
 
-# 강제 푸시 (주의: 협업 시 사용 금지)
-git push --force
+## 라이선스
 
-```
-
-## 폴더 구조
-
-```
-lib/
-├── core/
-│   ├── controllers/    # 전역 컨트롤러
-│   └── themes/         # 테마 설정
-└── features/           # 기능별 모듈
-    ├── todo/
-    │   ├── controllers/
-    │   ├── models/
-    │   └── screens/
-    └── github/         # API 연동 예제
-        ├── controllers/
-        ├── models/
-        └── repositories/
-```
-
-## 주요 패키지
-
-- `flutter_riverpod: ^3.2.0` - 상태 관리
-- `easy_localization: ^3.0.8` - 다국어 지원
-- `google_fonts: ^8.0.0` - 폰트
-- `http: ^1.6.0` - HTTP 클라이언트
-- `firebase_core: ^4.4.0` - Firebase 코어
-- `firebase_crashlytics: ^5.0.7` - 크래시 리포팅
-- `pedantic_mono: ^1.35.0` - 린트 규칙
-
-## 📚 문서
-
-- **[프로젝트 구조](docs/architecture/project-structure.md)** - 폴더 구조와 모듈화 전략
-- **[스크린 & 위젯](docs/architecture/screens.md)** - 화면과 위젯 작성 가이드
-- **[컨트롤러](docs/architecture/controllers.md)** - Riverpod 상태 관리 (Notifier, AsyncNotifier)
-- **[레포지토리](docs/architecture/repositories.md)** - Repository 레이어 사용 가이드
-- **[다국어화](docs/features/localization.md)** - easy_localization 사용법
-- **[테마](docs/features/theming.md)** - 색상, 타이포그래피, 테마 전환
-- **[에러 핸들링](docs/architecture/error-handling.md)** - 에러 처리와 Crashlytics
-
----
-
-## 🔧 추가 설정 (선택사항)
-
-- **[Firebase 설정](docs/setup/FIREBASE_SETUP.md)** - Firebase & Crashlytics 설정
-- **[Claude Code MCP 설정](docs/setup/CLAUDE_CODE_MCP_SETUP.md)** - Figma 연동 설정
-
-## 라이센스
-
-MIT
+- 코드: MIT ([LICENSE.txt](LICENSE.txt))
+- 폰트 Pretendard: SIL Open Font License 1.1 ([assets/fonts/OFL.txt](assets/fonts/OFL.txt))
