@@ -25,6 +25,7 @@ class AppProgressBar extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(AppRadius.full),
       child: SizedBox(
+        width: double.infinity,
         height: height,
         child: ColoredBox(
           color: colors.surfaceHigh,

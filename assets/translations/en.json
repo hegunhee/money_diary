@@ -170,5 +170,34 @@
       "same_asset": "The two accounts are the same.",
       "save": "Couldn't save. Please try again."
     }
+  },
+  "report": {
+    "net_saving": "Net savings this month",
+    "savings_rate": "Savings rate {}",
+    "total_income": "Income",
+    "total_expense": "Expenses",
+    "income_count": "{} deposits",
+    "budget_usage": "{} of budget",
+    "transfer_excluded": "Transfers excluded",
+    "transfer_notice": "Transfers between accounts ({}) don't change your assets, so they are left out of income and expense stats.",
+    "vs_last_month_less": "{} less than last month",
+    "vs_last_month_more": "{} more than last month",
+    "tab": {
+      "category": "Category",
+      "asset": "Account",
+      "project": "Project"
+    },
+    "share_title": {
+      "category": "Spending by category",
+      "asset": "Spending by payment method",
+      "project": "Spending by project"
+    },
+    "daily_average": "{} per day",
+    "empty": "No expenses recorded this month.",
+    "project_empty": "No project expenses this month.",
+    "project_caption": "{} of spending · {} of budget",
+    "comment_title": "This month's note",
+    "comment_top_category": "{category} is your biggest expense at {amount}, {percent} of the total.",
+    "see_history": "View expenses"
   }
 }
