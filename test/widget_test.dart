@@ -4,7 +4,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money_diary/core/themes/app_theme.dart';
 import 'package:money_diary/features/main/screens/main_screen.dart';
 import 'package:money_diary/shared/controllers/ledger_controller.dart';
+import 'package:money_diary/shared/controllers/today_controller.dart';
+import 'package:money_diary/shared/models/asset_account.dart';
 import 'package:money_diary/shared/models/ledger_book.dart';
+import 'package:money_diary/shared/models/ledger_category.dart';
+import 'package:money_diary/shared/models/ledger_entry.dart';
 import 'package:money_diary/shared/repositories/ledger_repository.dart';
 import 'package:money_diary/shared/util/ledger_calculator.dart';
 
@@ -47,6 +51,49 @@ void main() {
     expect(book.monthlyBudget, 0);
     expect(book.assets.single.balance, 0);
     expect(netWorth(book.assets), 0);
+  });
+
+  test('앱을 열면 밀린 반복 거래가 등록되고 잔액에 한 번만 반영된다', () async {
+    final salary = LedgerEntry(
+      id: 'salary',
+      type: EntryType.income,
+      amount: 3000000,
+      title: '급여',
+      occurredAt: DateTime(2026, 2, 10, 9),
+      assetId: 'bank',
+      category: LedgerCategory.salary,
+      isRecurring: true,
+    );
+    final repository = FakeLedgerRepository(
+      LedgerBook(
+        entries: [salary],
+        assets: const [
+          AssetAccount(
+            id: 'bank',
+            name: '통장',
+            kind: AssetKind.bank,
+            balance: 3000000,
+          ),
+        ],
+      ),
+    );
+    final container = ProviderContainer(
+      overrides: [
+        ledgerRepositoryProvider.overrideWithValue(repository),
+        todayProvider.overrideWithValue(designToday),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final book = await container.read(ledgerProvider.future);
+    await container.read(ledgerProvider.notifier).registerDueRecurring();
+
+    // 2월 10일 급여 → 3월 10일에 한 건. 오늘은 3월 18일입니다.
+    final after = container.read(ledgerProvider).requireValue;
+    expect(book.entries, hasLength(2));
+    expect(after.entries, hasLength(2));
+    expect(after.entries.last.occurredAt, DateTime(2026, 3, 10, 9));
+    expect(after.assetById('bank')!.balance, 6000000);
   });
 }
 

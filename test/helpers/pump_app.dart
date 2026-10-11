@@ -39,6 +39,14 @@ class FakeLedgerRepository implements LedgerRepository {
     saved.add(entry);
   }
 
+  @override
+  Future<void> saveEntries(
+    List<LedgerEntry> entries,
+    List<AssetAccount> assets,
+  ) async {
+    saved.addAll(entries);
+  }
+
   /// [deleteEntry]로 지워진 거래 id
   final List<String> deleted = [];
 

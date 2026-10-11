@@ -85,6 +85,43 @@ void main() {
     expect(recordStreak(entries, DateTime(2026, 3, 19)), 0);
   });
 
+  group('매달 반복', () {
+    final rent = LedgerEntry(
+      id: 'rent',
+      type: EntryType.expense,
+      amount: 500000,
+      title: '월세',
+      occurredAt: DateTime(2026, 1, 31, 9),
+      assetId: 'bank',
+      isRecurring: true,
+      recurringDay: 31,
+    );
+
+    test('한 달이 지나기 전에는 아무것도 만들지 않는다', () {
+      expect(dueRecurringEntries([rent], DateTime(2026, 2, 27)), isEmpty);
+    });
+
+    test('건너뛴 달을 모두 만들고, 31일 반복은 2월 말일을 지나 다시 31일로 돌아온다', () {
+      final changed = dueRecurringEntries([rent], DateTime(2026, 4));
+      final byId = {for (final entry in changed) entry.id: entry};
+
+      expect(byId.keys, {'rent', 'rent-r202602', 'rent-r202603'});
+      expect(byId['rent-r202602']!.occurredAt, DateTime(2026, 2, 28, 9));
+      expect(byId['rent-r202603']!.occurredAt, DateTime(2026, 3, 31, 9));
+      expect(byId['rent']!.recurrenceHandled, isTrue);
+      expect(byId['rent-r202602']!.recurrenceHandled, isTrue);
+      expect(byId['rent-r202603']!.recurrenceHandled, isFalse);
+      expect(byId['rent-r202603']!.amount, 500000);
+    });
+
+    test('이미 만든 달은 다시 만들지 않는다', () {
+      final now = DateTime(2026, 4);
+      final once = dueRecurringEntries([rent], now);
+
+      expect(dueRecurringEntries(once, now), isEmpty);
+    });
+  });
+
   group('applyEntry', () {
     const assets = [
       AssetAccount(id: 'bank', name: '통장', kind: AssetKind.bank, balance: 1000),

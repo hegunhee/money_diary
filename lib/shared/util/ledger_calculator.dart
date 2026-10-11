@@ -109,6 +109,56 @@ int projectSpent(Iterable<LedgerEntry> entries, String projectId) {
   return spent;
 }
 
+/// [from]의 다음 달 같은 날입니다. 그 달에 [day]일이 없으면 말일로 당깁니다.
+DateTime nextMonthlyDate(DateTime from, int day) {
+  final lastDay = DateTime(from.year, from.month + 2, 0).day;
+  return DateTime(
+    from.year,
+    from.month + 1,
+    day > lastDay ? lastDay : day,
+    from.hour,
+    from.minute,
+  );
+}
+
+final _occurrenceSuffix = RegExp(r'-r\d{6}$');
+
+/// 매달 반복으로 지금까지 등록됐어야 할 거래를 만듭니다.
+///
+/// 돌려주는 목록에는 새로 만든 거래와, 다음 달 거래를 만들었다고 표시한 원래 거래가 함께
+/// 들어 있습니다. 여러 달을 건너뛰었으면 그 사이 달을 모두 만듭니다. 만들 것이 없으면
+/// 빈 목록입니다.
+List<LedgerEntry> dueRecurringEntries(
+  Iterable<LedgerEntry> entries,
+  DateTime now,
+) {
+  final changed = <LedgerEntry>[];
+  for (final source in entries) {
+    if (!source.isRecurring || source.recurrenceHandled) {
+      continue;
+    }
+    final day = source.recurringDay ?? source.occurredAt.day;
+    final seriesId = source.id.replaceFirst(_occurrenceSuffix, '');
+    var current = source;
+    while (true) {
+      final next = nextMonthlyDate(current.occurredAt, day);
+      if (next.isAfter(now)) {
+        break;
+      }
+      changed.add(current.asRecurrenceHandled());
+      final month = '${next.year}${next.month.toString().padLeft(2, '0')}';
+      current = current.asNextOccurrence(
+        id: '$seriesId-r$month',
+        occurredAt: next,
+      );
+    }
+    if (!identical(current, source)) {
+      changed.add(current);
+    }
+  }
+  return changed;
+}
+
 /// [today]까지 하루도 빠지지 않고 기록한 날 수입니다. 오늘 기록이 없으면 0입니다.
 int recordStreak(Iterable<LedgerEntry> entries, DateTime today) {
   final days = {

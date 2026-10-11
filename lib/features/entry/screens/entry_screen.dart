@@ -15,6 +15,7 @@ import 'package:money_diary/shared/controllers/ledger_controller.dart';
 import 'package:money_diary/shared/controllers/today_controller.dart';
 import 'package:money_diary/shared/models/ledger_category.dart';
 import 'package:money_diary/shared/models/ledger_entry.dart';
+import 'package:money_diary/shared/util/ledger_calculator.dart';
 import 'package:money_diary/shared/util/ledger_labels.dart';
 import 'package:money_diary/shared/util/won_format.dart';
 import 'package:money_diary/shared/util/won_input.dart';
@@ -22,6 +23,7 @@ import 'package:money_diary/shared/widgets/app_content_width.dart';
 import 'package:money_diary/shared/widgets/app_fill_button.dart';
 import 'package:money_diary/shared/widgets/app_filter_chip.dart';
 import 'package:money_diary/shared/widgets/app_sheet.dart';
+import 'package:money_diary/shared/widgets/app_tap_row.dart';
 import 'package:money_diary/shared/widgets/asset_edit_sheet.dart';
 import 'package:money_diary/shared/widgets/inline_error_text.dart';
 
@@ -125,6 +127,12 @@ class EntryScreen extends HookConsumerWidget {
     }
 
     final today = ref.watch(todayProvider);
+    // 날짜를 그대로 두고 고칠 때는 처음 반복을 건 날을 지킵니다.
+    final recurringDay =
+        editing != null &&
+            DateUtils.isSameDay(editing.occurredAt, occurredAt.value)
+        ? editing.recurringDay ?? occurredAt.value.day
+        : occurredAt.value.day;
     // 보관한 프로젝트는 새로 붙일 수 없습니다. 이미 붙어 있던 거래를 고칠 때만 보여 줍니다.
     final taggableProjects = [
       for (final project in book.projects)
@@ -202,6 +210,9 @@ class EntryScreen extends HookConsumerWidget {
         projectId: isTransfer ? null : projectId.value,
         memo: memo.text.trim().isEmpty ? null : memo.text.trim(),
         isRecurring: recurring.value,
+        recurringDay: recurring.value ? recurringDay : null,
+        recurrenceHandled:
+            recurring.value && (editing?.recurrenceHandled ?? false),
       );
       saving.value = true;
       saveFailed.value = false;
@@ -336,6 +347,54 @@ class EntryScreen extends HookConsumerWidget {
                       ),
                     ),
                     Icon(Icons.schedule, size: 20, color: colors.textSecondary),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            AppTapRow(
+              onTap: () => recurring.value = !recurring.value,
+              borderRadius: BorderRadius.circular(AppRadius.md),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                child: Row(
+                  children: [
+                    Checkbox(
+                      value: recurring.value,
+                      onChanged: (value) => recurring.value = value ?? false,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'entry.recurring'.tr(),
+                            style: AppTypography.bodyMd.copyWith(
+                              color: colors.textPrimary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          if (recurring.value)
+                            Text(
+                              editing?.recurrenceHandled ?? false
+                                  ? 'entry.recurring_handled'.tr()
+                                  : 'entry.recurring_next'.tr(
+                                      args: [
+                                        dottedDateLabel(
+                                          nextMonthlyDate(
+                                            occurredAt.value,
+                                            recurringDay,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                              style: AppTypography.bodySm.copyWith(
+                                color: colors.textSecondary,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -552,23 +611,6 @@ class EntryScreen extends HookConsumerWidget {
                     decoration: field('entry.memo_hint'.tr()),
                   ),
                 ],
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            EntrySectionCard(
-              icon: Icons.event_repeat,
-              label: 'entry.recurring'.tr(),
-              trailing: Switch(
-                value: recurring.value,
-                onChanged: (value) => recurring.value = value,
-              ),
-              child: Text(
-                recurring.value
-                    ? 'entry.recurring_on'.tr()
-                    : 'entry.recurring_off'.tr(),
-                style: AppTypography.bodySm.copyWith(
-                  color: colors.textSecondary,
-                ),
               ),
             ),
           ],

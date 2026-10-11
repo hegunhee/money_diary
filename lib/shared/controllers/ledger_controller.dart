@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:money_diary/shared/controllers/today_controller.dart';
 import 'package:money_diary/shared/models/asset_account.dart';
 import 'package:money_diary/shared/models/ledger_book.dart';
 import 'package:money_diary/shared/models/ledger_category.dart';
@@ -34,7 +35,33 @@ class LedgerController extends AsyncNotifier<LedgerBook> {
         ),
       );
     }
-    return repository.load();
+    return _withDueRecurring(await repository.load());
+  }
+
+  /// 매달 반복으로 지금까지 등록됐어야 할 거래를 만들어 저장합니다.
+  Future<LedgerBook> _withDueRecurring(LedgerBook book) async {
+    final changed = dueRecurringEntries(book.entries, ref.read(todayProvider));
+    if (changed.isEmpty) {
+      return book;
+    }
+    final existing = {for (final entry in book.entries) entry.id};
+    var assets = book.assets;
+    var entries = book.entries;
+    for (final entry in changed) {
+      // 새로 만든 거래만 잔액에 반영합니다. 원래 거래는 표시만 바뀝니다.
+      if (!existing.contains(entry.id)) {
+        assets = applyEntry(assets, entry);
+      }
+      entries = _upsert(entries, entry, (e) => e.id);
+    }
+    await ref.read(ledgerRepositoryProvider).saveEntries(changed, assets);
+    return book.copyWith(entries: entries, assets: assets);
+  }
+
+  /// 앱으로 돌아왔을 때처럼 날짜가 바뀌었을 수 있을 때, 밀린 반복 거래를 등록합니다.
+  Future<void> registerDueRecurring() async {
+    final book = await future;
+    state = AsyncData(await _withDueRecurring(book));
   }
 
   /// 거래를 더하고 자산 잔액에 반영합니다.
@@ -42,8 +69,11 @@ class LedgerController extends AsyncNotifier<LedgerBook> {
     final book = await future;
     final assets = applyEntry(book.assets, entry);
     await ref.read(ledgerRepositoryProvider).saveEntry(entry, assets);
+    // 지난 날짜로 적은 반복 거래는 밀린 달을 바로 이어서 등록합니다.
     state = AsyncData(
-      book.copyWith(entries: [...book.entries, entry], assets: assets),
+      await _withDueRecurring(
+        book.copyWith(entries: [...book.entries, entry], assets: assets),
+      ),
     );
   }
 
@@ -54,9 +84,11 @@ class LedgerController extends AsyncNotifier<LedgerBook> {
     final assets = applyEntry(revertEntry(book.assets, old), entry);
     await ref.read(ledgerRepositoryProvider).saveEntry(entry, assets);
     state = AsyncData(
-      book.copyWith(
-        entries: _upsert(book.entries, entry, (e) => e.id),
-        assets: assets,
+      await _withDueRecurring(
+        book.copyWith(
+          entries: _upsert(book.entries, entry, (e) => e.id),
+          assets: assets,
+        ),
       ),
     );
   }
