@@ -33,7 +33,11 @@ class AppFilterChip extends StatelessWidget {
       selected: selected,
       child: Material(
         color: selected ? colors.inverseSurface : colors.surface,
-        borderRadius: BorderRadius.circular(AppRadius.full),
+        shape: StadiumBorder(
+          side: selected
+              ? BorderSide.none
+              : BorderSide(color: colors.divider.withValues(alpha: 0.6)),
+        ),
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(AppRadius.full),

@@ -111,6 +111,64 @@
     "transfer_count": "({} transfers)",
     "empty": "No records match this filter.",
     "streak_title": "{}-day recording streak!",
-    "streak_description": "The more you record, the clearer your spending gets."
+    "streak_description": "The more you record, the clearer your spending gets.",
+    "write": "Add record"
+  },
+  "entry": {
+    "title": "Add record",
+    "cancel": "Cancel",
+    "save": "Save",
+    "save_and_continue": "Save & add more",
+    "type": {
+      "expense": "Expense",
+      "income": "Income",
+      "transfer": "Transfer"
+    },
+    "amount_label": {
+      "expense": "Expense amount",
+      "income": "Income amount",
+      "transfer": "Transfer amount"
+    },
+    "amount_step": {
+      "1000": "+1K",
+      "5000": "+5K",
+      "10000": "+10K",
+      "50000": "+50K"
+    },
+    "amount_reset": "Reset",
+    "amount_delete": "Delete a digit",
+    "date": "Date & time",
+    "asset_label": {
+      "expense": "Paid with",
+      "income": "Deposited to",
+      "transfer": "From"
+    },
+    "to_asset": "To",
+    "asset_change": "Change",
+    "asset_placeholder": "Choose an account",
+    "asset_balance": "Balance {}",
+    "asset_due": "Due {}",
+    "transfer_notice": "Transfers move money between accounts and are left out of income and expense stats.",
+    "category_label": {
+      "expense": "Expense category",
+      "income": "Income category",
+      "transfer": "Category"
+    },
+    "project": "Project tag",
+    "optional": "Optional",
+    "project_hint": "Tag a project to track budgets for trips, moves or weddings separately.",
+    "memo": "Details & memo",
+    "title_hint": "Details (e.g. Starbucks Gangnam)",
+    "memo_hint": "Memo",
+    "recurring": "Recurring",
+    "recurring_on": "Marked as a monthly recurring record.",
+    "recurring_off": "Recorded once.",
+    "error": {
+      "amount": "Enter an amount.",
+      "asset": "Choose an account.",
+      "to_asset": "Choose the receiving account.",
+      "same_asset": "The two accounts are the same.",
+      "save": "Couldn't save. Please try again."
+    }
   }
 }
