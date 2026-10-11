@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:marionette_flutter/marionette_flutter.dart';
 import 'package:money_diary/core/themes/app_theme.dart';
-import 'package:money_diary/features/home/screens/home_screen.dart';
+import 'package:money_diary/features/main/screens/main_screen.dart';
 import 'package:money_diary/setup.dart';
 
 /// 테스트 실행 여부 (flutter test 환경에서 true)
@@ -23,6 +24,8 @@ void main() {
         WidgetsFlutterBinding.ensureInitialized();
       }
       await _initializeExternalServices();
+      // 로컬 DB 초기화
+      await Hive.initFlutter();
       // 다국어 지원 초기화
       await EasyLocalization.ensureInitialized();
 
@@ -68,7 +71,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: context.supportedLocales,
       localizationsDelegates: context.localizationDelegates,
       builder: AppTheme.withSystemOverlay,
-      home: const HomeScreen(),
+      home: const MainScreen(),
     );
   }
 }

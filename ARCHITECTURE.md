@@ -12,7 +12,11 @@ lib/
 ├── core/                 # 의존성 없이 앱 전체에 적용되는 leaf 코드
 │   └── themes/           # app_palette · app_colors · app_typography · app_spacing · app_layout · app_theme
 ├── shared/               # 여러 feature에서 중복되는 컴포넌트·코드
-│   └── widgets/          # 공용 UI (버튼 · 누름 반응 · 오류 안내)
+│   ├── models/           # 가계부 모델 (LedgerEntry · AssetAccount · Project · LedgerBook)
+│   ├── repositories/     # 로컬 DB(Hive) 읽기·쓰기 (ledger_repository)
+│   ├── controllers/      # 여러 화면이 쓰는 상태 (가계부 · 보는 달 · 하단 탭)
+│   ├── util/             # 계산(ledger_calculator) · 표기(ledger_labels · won_format)
+│   └── widgets/          # 공용 UI (카드 · 배지 · 거래 줄 · 버튼 · 하단 탭)
 └── features/<feature>/
     ├── models/           # 데이터 모델
     ├── repositories/     # 로컬 DB 읽기·쓰기
@@ -24,7 +28,17 @@ lib/
 - 의존은 **`features → shared → core`** 한 방향(역방향 금지).
   - **core** : 의존성 없이 앱 전체에 적용되는 기능(테마·순수 유틸).
   - **shared** : 여러 feature에서 중복되는 컴포넌트·코드(공용 위젯 등).
-- 지금 있는 feature 는 `home` 하나입니다. 하위 폴더는 필요해질 때 만듭니다.
+- feature: `main`(하단 탭 뼈대) · `home`(대시보드). 하위 폴더는 필요해질 때 만듭니다.
+
+## 로컬 저장
+
+- [hive_ce](https://pub.dev/packages/hive_ce) 로 기기에 저장합니다. 거래·자산·프로젝트를 상자 하나씩에
+  id 를 키로, 모델의 `toJson()` 맵을 값으로 넣습니다(코드 생성 없음).
+- `LedgerRepository` 만 Hive 를 압니다. 화면 테스트는 `test/helpers/pump_app.dart` 의
+  `FakeLedgerRepository` 로 바꿔 끼웁니다.
+- 거래를 더하면 `applyEntry` 가 자산 잔액을 함께 고쳐 저장합니다.
+- 자산·프로젝트·예산 관리 화면이 아직 없어, **개발 빌드**는 처음 실행할 때 시안의 예시
+  가계부(`shared/util/sample_ledger.dart`)를 채웁니다. 릴리스 빌드는 빈 가계부로 시작합니다.
 
 ## 데이터 흐름
 

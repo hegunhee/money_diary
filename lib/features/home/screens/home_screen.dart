@@ -1,53 +1,96 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:money_diary/core/themes/app_colors.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money_diary/core/themes/app_spacing.dart';
-import 'package:money_diary/core/themes/app_typography.dart';
+import 'package:money_diary/features/home/widgets/monthly_status_card.dart';
+import 'package:money_diary/features/home/widgets/net_worth_card.dart';
+import 'package:money_diary/features/home/widgets/project_card.dart';
+import 'package:money_diary/features/home/widgets/quick_action_row.dart';
+import 'package:money_diary/features/home/widgets/recent_entries_section.dart';
+import 'package:money_diary/shared/controllers/ledger_controller.dart';
+import 'package:money_diary/shared/controllers/main_tab_controller.dart';
+import 'package:money_diary/shared/controllers/today_controller.dart';
+import 'package:money_diary/shared/util/ledger_calculator.dart';
 import 'package:money_diary/shared/widgets/app_content_width.dart';
+import 'package:money_diary/shared/widgets/app_error_view.dart';
+import 'package:money_diary/shared/widgets/app_top_bar.dart';
+import 'package:money_diary/shared/widgets/month_selector.dart';
 
-/// 홈 화면
-///
-/// 아직 기록 기능이 없어 빈 상태 안내만 보여 줍니다.
-class HomeScreen extends StatelessWidget {
+/// 홈 대시보드 — 순자산, 이번 달 현황, 진행 중인 프로젝트, 최근 거래
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
+  /// 최근 거래로 보여 주는 날짜 수
+  static const _recentDays = 2;
+
   @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ledger = ref.watch(ledgerProvider);
+    final month = ref.watch(selectedMonthProvider);
+    final today = ref.watch(todayProvider);
+    final isThisMonth = month.year == today.year && month.month == today.month;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'common.app_name'.tr(),
-          style: AppTypography.headlineSm.copyWith(color: colors.textPrimary),
+      appBar: AppTopBar(section: 'nav.home'.tr()),
+      body: ledger.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, _) => AppErrorView(
+          message: 'common.load_failed'.tr(),
+          onRetry: () => ref.invalidate(ledgerProvider),
         ),
-      ),
-      body: SafeArea(
-        child: AppContentWidth(
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.xl),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+        data: (book) {
+          final entries = entriesInMonth(book.entries, month);
+          final totals = totalsOf(entries);
+          final projects = book.projects.where(
+            (project) => !project.endDate.isBefore(today),
+          );
+          return AppContentWidth(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.gutter,
+                0,
+                AppSpacing.gutter,
+                AppSpacing.xl,
+              ),
               children: [
-                Text(
-                  'home.empty_title'.tr(),
-                  textAlign: TextAlign.center,
-                  style: AppTypography.headlineLg.copyWith(
-                    color: colors.textPrimary,
-                  ),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: MonthSelector(),
                 ),
-                const SizedBox(height: AppSpacing.sm),
-                Text(
-                  'home.empty_description'.tr(),
-                  textAlign: TextAlign.center,
-                  style: AppTypography.bodyLg.copyWith(
-                    color: colors.textSecondary,
+                NetWorthCard(
+                  assets: book.assets,
+                  monthlyChange: isThisMonth ? totals.net : null,
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                MonthlyStatusCard(
+                  month: month,
+                  totals: totals,
+                  monthlyBudget: book.monthlyBudget,
+                  dayOfMonth: isThisMonth ? today.day : null,
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                const QuickActionRow(onAdd: null),
+                for (final project in projects) ...[
+                  const SizedBox(height: AppSpacing.lg),
+                  ProjectCard(
+                    project: project,
+                    spent: projectSpent(book.entries, project.id),
+                    today: today,
                   ),
+                ],
+                const SizedBox(height: AppSpacing.sm),
+                RecentEntriesSection(
+                  days: groupByDay(entries).take(_recentDays).toList(),
+                  book: book,
+                  today: today,
+                  onSeeAll: () => ref
+                      .read(mainTabProvider.notifier)
+                      .select(MainTab.history),
                 ),
               ],
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

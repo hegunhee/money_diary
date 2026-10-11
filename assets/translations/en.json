@@ -1,9 +1,93 @@
 {
   "common": {
     "app_name": "Pocket Ledger",
-    "retry": "Try again"
+    "app_subtitle": "Pocket Ledger",
+    "retry": "Try again",
+    "load_failed": "Couldn't load your ledger.",
+    "coming_soon": "This screen is coming soon.",
+    "won": "₩{}",
+    "year_month": "{month}/{year}",
+    "month_day": "{month}/{day}",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "previous_month": "Previous month",
+    "next_month": "Next month",
+    "weekday_short": {
+      "1": "Mon",
+      "2": "Tue",
+      "3": "Wed",
+      "4": "Thu",
+      "5": "Fri",
+      "6": "Sat",
+      "7": "Sun"
+    },
+    "weekday": {
+      "1": "Monday",
+      "2": "Tuesday",
+      "3": "Wednesday",
+      "4": "Thursday",
+      "5": "Friday",
+      "6": "Saturday",
+      "7": "Sunday"
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "history": "History",
+    "report": "Report",
+    "projects": "Projects",
+    "settings": "Settings"
+  },
+  "category": {
+    "food": "Food",
+    "housing": "Housing",
+    "transport": "Transport",
+    "shopping": "Shopping",
+    "culture": "Leisure",
+    "medical": "Medical",
+    "etc": "Other",
+    "salary": "Salary",
+    "otherIncome": "Side income"
+  },
+  "asset": {
+    "kind": {
+      "bank": "Savings",
+      "investment": "Investments",
+      "cash": "Cash",
+      "creditCard": "Credit card",
+      "pay": "Mobile pay"
+    }
+  },
+  "ledger": {
+    "transfer_badge": "Transfer",
+    "recurring_badge": "Recurring",
+    "asset_move": "Transfer"
   },
   "home": {
+    "net_worth": "Net worth",
+    "hide_amount": "Hide amounts",
+    "show_amount": "Show amounts",
+    "vs_last_month": "vs last month {amount} ({percent})",
+    "month_status": "Month {}",
+    "day_count": "Day {}",
+    "savings_rate": "Saved {}",
+    "total_income": "Income",
+    "total_expense": "Expenses",
+    "transfer_excluded": "Transfers excluded",
+    "budget_usage": "{} of budget",
+    "month_saved": "Saved this month",
+    "quick_action": {
+      "expense": "Add expense",
+      "income": "Add income",
+      "transfer": "Add transfer"
+    },
+    "project_active": "Active",
+    "project_used": "Used {}",
+    "project_remaining": "Left {}",
+    "project_over": "Over by {}",
+    "project_daily": "Per day {}",
+    "recent_title": "Recent activity",
+    "see_all": "See all",
     "empty_title": "No records yet",
     "empty_description": "Your spending will show up here once you add it."
   }
