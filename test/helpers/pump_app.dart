@@ -5,6 +5,7 @@ import 'package:money_diary/core/themes/app_theme.dart';
 import 'package:money_diary/shared/controllers/today_controller.dart';
 import 'package:money_diary/shared/models/asset_account.dart';
 import 'package:money_diary/shared/models/ledger_book.dart';
+import 'package:money_diary/shared/models/ledger_category.dart';
 import 'package:money_diary/shared/models/ledger_entry.dart';
 import 'package:money_diary/shared/models/project.dart';
 import 'package:money_diary/shared/repositories/ledger_repository.dart';
@@ -57,6 +58,12 @@ class FakeLedgerRepository implements LedgerRepository {
 
   @override
   Future<void> deleteProject(String id, List<LedgerEntry> untagged) async {}
+
+  @override
+  Future<void> saveCategory(LedgerCategory category) async {}
+
+  @override
+  Future<void> deleteCategory(String id) async {}
 
   @override
   Future<void> saveMonthlyBudget(int budget) async {}

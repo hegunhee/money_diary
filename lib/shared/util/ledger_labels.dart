@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:money_diary/shared/models/asset_account.dart';
+import 'package:money_diary/shared/models/ledger_category.dart';
 import 'package:money_diary/shared/models/ledger_entry.dart';
 import 'package:money_diary/shared/util/won_format.dart';
 
@@ -47,18 +48,19 @@ String dottedDateLabel(DateTime date) =>
 
 /// 카테고리의 이름과 아이콘
 extension LedgerCategoryLabel on LedgerCategory {
-  String get label => 'category.$name'.tr();
+  String get label => customName ?? 'category.$id'.tr();
 
-  IconData get icon => switch (this) {
-    LedgerCategory.food => Icons.restaurant_outlined,
-    LedgerCategory.housing => Icons.home_outlined,
-    LedgerCategory.transport => Icons.directions_bus_outlined,
-    LedgerCategory.shopping => Icons.shopping_bag_outlined,
-    LedgerCategory.culture => Icons.movie_outlined,
-    LedgerCategory.medical => Icons.medication_outlined,
-    LedgerCategory.etc => Icons.more_horiz,
-    LedgerCategory.salary => Icons.payments_outlined,
-    LedgerCategory.otherIncome => Icons.savings_outlined,
+  IconData get icon => switch (id) {
+    'food' => Icons.restaurant_outlined,
+    'housing' => Icons.home_outlined,
+    'transport' => Icons.directions_bus_outlined,
+    'shopping' => Icons.shopping_bag_outlined,
+    'culture' => Icons.movie_outlined,
+    'medical' => Icons.medication_outlined,
+    'etc' => Icons.more_horiz,
+    'salary' => Icons.payments_outlined,
+    'otherIncome' => Icons.savings_outlined,
+    _ => Icons.label_outline,
   };
 }
 

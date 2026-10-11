@@ -2,6 +2,7 @@ import 'package:hive_ce/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money_diary/shared/models/asset_account.dart';
 import 'package:money_diary/shared/models/ledger_book.dart';
+import 'package:money_diary/shared/models/ledger_category.dart';
 import 'package:money_diary/shared/models/ledger_entry.dart';
 import 'package:money_diary/shared/models/project.dart';
 
@@ -17,6 +18,7 @@ class LedgerRepository {
   static const _entries = 'ledger_entries';
   static const _assets = 'ledger_assets';
   static const _projects = 'ledger_projects';
+  static const _categories = 'ledger_categories';
   static const _settings = 'ledger_settings';
   static const _monthlyBudget = 'monthlyBudget';
   static const _initialized = 'initialized';
@@ -45,6 +47,9 @@ class LedgerRepository {
               : a.kind.index.compareTo(b.kind.index),
         ),
       projects: rows(await _box(_projects)).map(Project.fromJson).toList(),
+      categories: rows(
+        await _box(_categories),
+      ).map(LedgerCategory.fromJson).toList(),
       monthlyBudget: settings.get(_monthlyBudget) as int? ?? 0,
     );
   }
@@ -58,6 +63,11 @@ class LedgerRepository {
     await entries.clear();
     await assets.clear();
     await projects.clear();
+    final categories = await _box(_categories);
+    await categories.clear();
+    await categories.putAll({
+      for (final c in book.categories) c.id: c.toJson(),
+    });
     await entries.putAll({for (final e in book.entries) e.id: e.toJson()});
     await assets.putAll({for (final a in book.assets) a.id: a.toJson()});
     await projects.putAll({for (final p in book.projects) p.id: p.toJson()});
@@ -104,6 +114,16 @@ class LedgerRepository {
       for (final entry in untagged) entry.id: entry.toJson(),
     });
     await (await _box(_projects)).delete(id);
+  }
+
+  /// 사용자가 더한 카테고리 하나를 저장합니다.
+  Future<void> saveCategory(LedgerCategory category) async {
+    await (await _box(_categories)).put(category.id, category.toJson());
+  }
+
+  /// 사용자가 더한 카테고리 하나를 지웁니다.
+  Future<void> deleteCategory(String id) async {
+    await (await _box(_categories)).delete(id);
   }
 
   /// 한 달 지출 예산을 저장합니다.

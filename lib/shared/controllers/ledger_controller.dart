@@ -2,10 +2,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money_diary/shared/models/asset_account.dart';
 import 'package:money_diary/shared/models/ledger_book.dart';
+import 'package:money_diary/shared/models/ledger_category.dart';
 import 'package:money_diary/shared/models/ledger_entry.dart';
 import 'package:money_diary/shared/models/project.dart';
 import 'package:money_diary/shared/repositories/ledger_repository.dart';
 import 'package:money_diary/shared/util/ledger_calculator.dart';
+import 'package:money_diary/shared/util/ledger_labels.dart';
 
 /// 가계부 Provider
 final ledgerProvider = AsyncNotifierProvider<LedgerController, LedgerBook>(
@@ -121,6 +123,38 @@ class LedgerController extends AsyncNotifier<LedgerBook> {
             entry.projectId == id ? entry.withoutProject() : entry,
         ],
         projects: [...book.projects.where((p) => p.id != id)],
+      ),
+    );
+  }
+
+  /// 카테고리를 더합니다. 같은 종류에 같은 이름이 이미 있으면 더하지 않고 null을 돌려줍니다.
+  Future<LedgerCategory?> addCategory(String name, EntryType type) async {
+    final book = await future;
+    final taken = book
+        .categoriesOf(type)
+        .any((category) => category.label == name);
+    if (taken) {
+      return null;
+    }
+    final category = LedgerCategory(
+      id: 'custom-${DateTime.now().microsecondsSinceEpoch}',
+      type: type,
+      customName: name,
+    );
+    await ref.read(ledgerRepositoryProvider).saveCategory(category);
+    state = AsyncData(
+      book.copyWith(categories: [...book.categories, category]),
+    );
+    return category;
+  }
+
+  /// 사용자가 더한 카테고리를 지웁니다. 그 카테고리로 적은 거래는 그대로 남습니다.
+  Future<void> deleteCategory(String id) async {
+    final book = await future;
+    await ref.read(ledgerRepositoryProvider).deleteCategory(id);
+    state = AsyncData(
+      book.copyWith(
+        categories: [...book.categories.where((c) => c.id != id)],
       ),
     );
   }

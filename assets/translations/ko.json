@@ -172,7 +172,17 @@
     },
     "asset_empty": "설정 탭에서 자산을 먼저 더해 주세요.",
     "title_edit": "내역 수정",
-    "delete_confirm": "이 내역을 지울까요? 자산 잔액도 함께 되돌립니다."
+    "delete_confirm": "이 내역을 지울까요? 자산 잔액도 함께 되돌립니다.",
+    "category_add": "추가",
+    "category_add_title": {
+      "expense": "지출 카테고리 추가",
+      "income": "수입 카테고리 추가",
+      "transfer": "카테고리 추가"
+    },
+    "category_name": "카테고리 이름",
+    "category_name_required": "이름을 입력해 주세요.",
+    "category_duplicate": "이미 있는 카테고리예요.",
+    "category_delete_confirm": "'{}' 카테고리를 지울까요? 이 카테고리로 적은 내역은 그대로 남습니다."
   },
   "report": {
     "net_saving": "이번 달 순 저축액",

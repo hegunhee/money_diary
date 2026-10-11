@@ -8,10 +8,12 @@ import 'package:money_diary/core/themes/app_typography.dart';
 import 'package:money_diary/features/entry/models/entry_form_error.dart';
 import 'package:money_diary/features/entry/widgets/amount_input_card.dart';
 import 'package:money_diary/features/entry/widgets/asset_picker_tile.dart';
+import 'package:money_diary/features/entry/widgets/category_add_sheet.dart';
 import 'package:money_diary/features/entry/widgets/entry_section_card.dart';
 import 'package:money_diary/features/entry/widgets/entry_type_segment.dart';
 import 'package:money_diary/shared/controllers/ledger_controller.dart';
 import 'package:money_diary/shared/controllers/today_controller.dart';
+import 'package:money_diary/shared/models/ledger_category.dart';
 import 'package:money_diary/shared/models/ledger_entry.dart';
 import 'package:money_diary/shared/util/ledger_labels.dart';
 import 'package:money_diary/shared/util/won_format.dart';
@@ -75,12 +77,42 @@ class EntryScreen extends HookConsumerWidget {
     final accent = entryTypeColor(colors, type.value);
     final asset = book.assetById(assetId.value) ?? book.assets.firstOrNull;
     final toAsset = book.assetById(toAssetId.value);
-    final categories = type.value == EntryType.income
-        ? LedgerCategory.incomeValues
-        : LedgerCategory.expenseValues;
+    final editingCategory = editing?.category;
+    final categories = [
+      ...book.categoriesOf(type.value),
+      // 고치는 거래의 카테고리가 지워졌어도 저장하면서 바뀌지 않게 계속 보여 줍니다.
+      if (editingCategory != null &&
+          editingCategory.type == type.value &&
+          !book.categoriesOf(type.value).contains(editingCategory))
+        editingCategory,
+    ];
     final selectedCategory = categories.contains(category.value)
         ? category.value
         : categories.first;
+
+    Future<void> addCategory() async {
+      final added = await showAppSheet<LedgerCategory>(
+        context,
+        title: 'entry.category_add_title.${type.value.name}'.tr(),
+        child: CategoryAddSheet(type: type.value),
+      );
+      if (added != null) {
+        category.value = added;
+      }
+    }
+
+    Future<void> deleteCategory(LedgerCategory item) async {
+      final confirmed = await confirmDelete(
+        context,
+        message: 'entry.category_delete_confirm'.tr(args: [item.label]),
+        confirmLabel: 'common.delete'.tr(),
+        cancelLabel: 'common.cancel'.tr(),
+      );
+      if (confirmed) {
+        await ref.read(ledgerProvider.notifier).deleteCategory(item.id);
+      }
+    }
+
     final today = ref.watch(todayProvider);
     // 보관한 프로젝트는 새로 붙일 수 없습니다. 이미 붙어 있던 거래를 고칠 때만 보여 줍니다.
     final taggableProjects = [
@@ -371,6 +403,9 @@ class EntryScreen extends HookConsumerWidget {
                           borderRadius: BorderRadius.circular(AppRadius.md),
                           child: InkWell(
                             onTap: () => category.value = item,
+                            onLongPress: item.isCustom
+                                ? () => deleteCategory(item)
+                                : null,
                             borderRadius: BorderRadius.circular(AppRadius.md),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -398,6 +433,30 @@ class EntryScreen extends HookConsumerWidget {
                           ),
                         ),
                       ),
+                    Material(
+                      color: colors.surface,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.md),
+                        side: BorderSide(color: colors.divider),
+                      ),
+                      child: InkWell(
+                        onTap: addCategory,
+                        borderRadius: BorderRadius.circular(AppRadius.md),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.add, size: 18, color: colors.primary),
+                            const SizedBox(width: AppSpacing.xs),
+                            Text(
+                              'entry.category_add'.tr(),
+                              style: AppTypography.labelMd.copyWith(
+                                color: colors.primary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
