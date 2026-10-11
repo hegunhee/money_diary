@@ -27,18 +27,13 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
       titleSpacing: AppSpacing.gutter,
       title: Row(
         children: [
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: colors.primary,
-              borderRadius: BorderRadius.circular(AppRadius.md),
-            ),
-            child: SizedBox.square(
-              dimension: 32,
-              child: Icon(
-                Icons.account_balance_wallet,
-                size: 18,
-                color: colors.onPrimary,
-              ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(AppRadius.md),
+            child: Image.asset(
+              'assets/images/app_logo.png',
+              width: 32,
+              height: 32,
+              excludeFromSemantics: true,
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
