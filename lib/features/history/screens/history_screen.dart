@@ -17,6 +17,7 @@ import 'package:money_diary/shared/widgets/app_content_width.dart';
 import 'package:money_diary/shared/widgets/app_error_view.dart';
 import 'package:money_diary/shared/widgets/app_filter_chip.dart';
 import 'package:money_diary/shared/widgets/app_top_bar.dart';
+import 'package:money_diary/shared/widgets/entry_delete_dialog.dart';
 import 'package:money_diary/shared/widgets/month_selector.dart';
 
 /// 가계부 내역 — 한 달의 거래를 날짜별로 묶어 보여 줍니다.
@@ -149,6 +150,8 @@ class HistoryScreen extends HookConsumerWidget {
                     child: DailyLedgerSection(
                       day: day,
                       book: book,
+                      onEntryLongPress: (entry) =>
+                          confirmDeleteEntry(context, ref, entry),
                       onEntryTap: (entry) => Navigator.of(
                         context,
                       ).push(EntryScreen.route(entry: entry)),

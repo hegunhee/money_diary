@@ -18,6 +18,7 @@ class ProjectCard extends StatelessWidget {
     required this.spent,
     required this.today,
     this.onTap,
+    this.onLongPress,
     super.key,
   });
 
@@ -30,6 +31,9 @@ class ProjectCard extends StatelessWidget {
 
   /// 카드를 눌렀을 때의 동작. null이면 누를 수 없습니다.
   final VoidCallback? onTap;
+
+  /// 카드를 꾹 눌렀을 때의 동작 (선택)
+  final VoidCallback? onLongPress;
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +57,7 @@ class ProjectCard extends StatelessWidget {
 
     return AppPressScale(
       onTap: onTap,
+      onLongPress: onLongPress,
       child: AppCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

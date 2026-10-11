@@ -14,6 +14,7 @@ import 'package:money_diary/shared/util/ledger_calculator.dart';
 import 'package:money_diary/shared/widgets/app_content_width.dart';
 import 'package:money_diary/shared/widgets/app_error_view.dart';
 import 'package:money_diary/shared/widgets/app_top_bar.dart';
+import 'package:money_diary/shared/widgets/entry_delete_dialog.dart';
 import 'package:money_diary/shared/widgets/month_selector.dart';
 import 'package:money_diary/shared/widgets/project_card.dart';
 
@@ -93,6 +94,8 @@ class HomeScreen extends ConsumerWidget {
                   onEntryTap: (entry) => Navigator.of(
                     context,
                   ).push(EntryScreen.route(entry: entry)),
+                  onEntryLongPress: (entry) =>
+                      confirmDeleteEntry(context, ref, entry),
                   onSeeAll: () => ref
                       .read(mainTabProvider.notifier)
                       .select(MainTab.history),

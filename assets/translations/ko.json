@@ -31,7 +31,9 @@
     },
     "save": "저장",
     "delete": "삭제",
-    "cancel": "취소"
+    "cancel": "취소",
+    "close": "확인",
+    "delete_failed": "지우지 못했어요. 다시 시도해 주세요."
   },
   "nav": {
     "home": "홈",
@@ -63,7 +65,8 @@
   "ledger": {
     "transfer_badge": "이체",
     "recurring_badge": "정기",
-    "asset_move": "자산이동"
+    "asset_move": "자산이동",
+    "delete_confirm": "'{title}' {amount} 내역을 지울까요? 자산 잔액도 함께 되돌립니다."
   },
   "home": {
     "net_worth": "총 순자산",

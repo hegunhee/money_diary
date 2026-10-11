@@ -17,6 +17,7 @@ class LedgerEntryRow extends StatelessWidget {
     required this.entry,
     required this.book,
     this.onTap,
+    this.onLongPress,
     super.key,
   });
 
@@ -27,6 +28,9 @@ class LedgerEntryRow extends StatelessWidget {
 
   /// 줄을 눌렀을 때의 동작. null이면 누를 수 없습니다.
   final VoidCallback? onTap;
+
+  /// 줄을 꾹 눌렀을 때의 동작 (선택)
+  final VoidCallback? onLongPress;
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +63,7 @@ class LedgerEntryRow extends StatelessWidget {
 
     return AppTapRow(
       onTap: onTap,
+      onLongPress: onLongPress,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.lg,

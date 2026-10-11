@@ -20,6 +20,7 @@ class RecentEntriesSection extends StatelessWidget {
     required this.today,
     required this.onSeeAll,
     required this.onEntryTap,
+    required this.onEntryLongPress,
     super.key,
   });
 
@@ -34,6 +35,9 @@ class RecentEntriesSection extends StatelessWidget {
 
   /// 거래 줄을 눌렀을 때의 동작
   final ValueChanged<LedgerEntry> onEntryTap;
+
+  /// 거래 줄을 꾹 눌렀을 때의 동작
+  final ValueChanged<LedgerEntry> onEntryLongPress;
 
   String _dayLabel(DateTime date) {
     final gap = DateTime(
@@ -159,6 +163,7 @@ class RecentEntriesSection extends StatelessWidget {
                     entry: entry,
                     book: book,
                     onTap: () => onEntryTap(entry),
+                    onLongPress: () => onEntryLongPress(entry),
                   ),
                 ],
               ],

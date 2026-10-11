@@ -31,7 +31,9 @@
     },
     "save": "Save",
     "delete": "Delete",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "close": "OK",
+    "delete_failed": "Couldn't delete. Please try again."
   },
   "nav": {
     "home": "Home",
@@ -63,7 +65,8 @@
   "ledger": {
     "transfer_badge": "Transfer",
     "recurring_badge": "Recurring",
-    "asset_move": "Transfer"
+    "asset_move": "Transfer",
+    "delete_confirm": "Delete '{title}' {amount}? Account balances will be restored too."
   },
   "home": {
     "net_worth": "Net worth",

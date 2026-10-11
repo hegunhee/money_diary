@@ -62,6 +62,24 @@ InputDecoration appInputDecoration(
   ),
 );
 
+/// 확인만 받으면 되는 안내를 띄웁니다. 꾹 눌러 지우다 실패했을 때처럼 알릴 자리가 없을 때 씁니다.
+Future<void> showNotice(
+  BuildContext context, {
+  required String message,
+  required String closeLabel,
+}) => showDialog<void>(
+  context: context,
+  builder: (context) => AlertDialog(
+    content: Text(message),
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.of(context).pop(),
+        child: Text(closeLabel),
+      ),
+    ],
+  ),
+);
+
 /// 되돌릴 수 없는 삭제 전에 한 번 더 묻습니다. 지우기로 하면 true입니다.
 Future<bool> confirmDelete(
   BuildContext context, {

@@ -21,4 +21,26 @@ void main() {
     expect(find.text('(이체 1건)'), findsNWidgets(2));
     expect(find.text('₩2,184,500'), findsOneWidget);
   });
+
+  testWidgets('거래를 꾹 누르면 지울지 묻고, 취소하면 남고 삭제하면 합계에서 빠진다', (tester) async {
+    final repository = await pumpApp(tester, const HistoryScreen());
+
+    await tester.longPress(find.text('삼진어묵'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('-18,200원 내역을 지울까요?'), findsOneWidget);
+    await tester.tap(find.text('취소'));
+    await tester.pumpAndSettle();
+    expect(repository.deleted, isEmpty);
+    expect(find.text('삼진어묵'), findsOneWidget);
+
+    await tester.longPress(find.text('삼진어묵'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('삭제'));
+    await tester.pumpAndSettle();
+
+    expect(repository.deleted, hasLength(1));
+    expect(find.text('삼진어묵'), findsNothing);
+    expect(find.text('총 24건 내역'), findsOneWidget);
+    expect(find.text('₩2,166,300'), findsOneWidget);
+  });
 }
