@@ -44,7 +44,7 @@ class HomeScreen extends ConsumerWidget {
           final entries = entriesInMonth(book.entries, month);
           final totals = totalsOf(entries);
           final projects = book.projects.where(
-            (project) => !project.endDate.isBefore(today),
+            (project) => !project.isArchived,
           );
           return AppContentWidth(
             child: ListView(

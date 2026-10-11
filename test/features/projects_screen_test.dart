@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:money_diary/features/entry/screens/entry_screen.dart';
 import 'package:money_diary/features/projects/screens/projects_screen.dart';
 import 'package:money_diary/shared/controllers/ledger_controller.dart';
 import 'package:money_diary/shared/controllers/today_controller.dart';
@@ -50,5 +51,33 @@ void main() {
     expect(find.text('진행 중 2'), findsOneWidget);
     expect(find.text('이사 준비'), findsOneWidget);
     expect(find.text('남은 예산 ₩ 3,000,000'), findsOneWidget);
+  });
+
+  testWidgets('보관한 프로젝트는 보관됨으로 내려가고 거래 입력의 태그에서 빠진다', (tester) async {
+    tester.view.physicalSize = const Size(430, 2400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await pumpApp(
+      tester,
+      const Column(
+        children: [
+          Expanded(child: ProjectsScreen()),
+          Expanded(child: EntryScreen()),
+        ],
+      ),
+    );
+    // 목록의 카드와 입력 화면의 태그, 두 군데에 보입니다.
+    expect(find.text('2026 일본 여행'), findsNWidgets(2));
+
+    await tester.tap(find.text('2026 일본 여행').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('보관하기'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('보관됨 1'), findsOneWidget);
+    expect(find.text('진행 중 1'), findsNothing);
+    expect(find.text('2026 일본 여행'), findsOneWidget);
+    // 기록은 그대로 남아 합계가 보입니다.
+    expect(find.textContaining('₩ 680,000'), findsOneWidget);
   });
 }

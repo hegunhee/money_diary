@@ -17,6 +17,9 @@ import 'package:money_diary/shared/widgets/app_top_bar.dart';
 import 'package:money_diary/shared/widgets/project_card.dart';
 
 /// 프로젝트 — 여행·이사처럼 목적별 예산을 진행 중과 보관됨으로 나눠 관리합니다.
+///
+/// 보관은 사용자가 직접 합니다. 여행이 끝난 뒤에도 정산 같은 지출이 이어질 수 있어
+/// 기간이 지났다고 자동으로 보관하지 않습니다.
 class ProjectsScreen extends ConsumerWidget {
   const ProjectsScreen({super.key});
 
@@ -25,7 +28,6 @@ class ProjectsScreen extends ConsumerWidget {
     final colors = context.colors;
     final ledger = ref.watch(ledgerProvider);
     final today = ref.watch(todayProvider);
-    final startOfToday = DateTime(today.year, today.month, today.day);
 
     void edit([Project? project]) => showAppSheet<void>(
       context,
@@ -73,15 +75,14 @@ class ProjectsScreen extends ConsumerWidget {
           onRetry: () => ref.invalidate(ledgerProvider),
         ),
         data: (book) {
-          // 기간이 끝난 프로젝트는 보관됨으로 내려갑니다.
           final sections = [
             (
               'project.title_active'.tr(),
-              book.projects.where((p) => !p.endDate.isBefore(startOfToday)),
+              book.projects.where((p) => !p.isArchived),
             ),
             (
               'project.title_archived'.tr(),
-              book.projects.where((p) => p.endDate.isBefore(startOfToday)),
+              book.projects.where((p) => p.isArchived),
             ),
           ];
           return AppContentWidth(

@@ -82,6 +82,11 @@ class EntryScreen extends HookConsumerWidget {
         ? category.value
         : categories.first;
     final today = ref.watch(todayProvider);
+    // 보관한 프로젝트는 새로 붙일 수 없습니다. 이미 붙어 있던 거래를 고칠 때만 보여 줍니다.
+    final taggableProjects = [
+      for (final project in book.projects)
+        if (!project.isArchived || project.id == projectId.value) project,
+    ];
 
     void moveDay(int daysAgo) {
       final at = occurredAt.value;
@@ -396,7 +401,7 @@ class EntryScreen extends HookConsumerWidget {
                   ],
                 ),
               ),
-              if (book.projects.isNotEmpty) ...[
+              if (taggableProjects.isNotEmpty) ...[
                 const SizedBox(height: AppSpacing.md),
                 EntrySectionCard(
                   icon: Icons.folder_outlined,
@@ -414,7 +419,7 @@ class EntryScreen extends HookConsumerWidget {
                         spacing: AppSpacing.sm,
                         runSpacing: AppSpacing.sm,
                         children: [
-                          for (final project in book.projects)
+                          for (final project in taggableProjects)
                             AppFilterChip(
                               label: project.name,
                               icon: Icons.flight_takeoff,

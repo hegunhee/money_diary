@@ -182,11 +182,37 @@ class ProjectEditSheet extends HookConsumerWidget {
           const SizedBox(height: AppSpacing.sm),
           InlineErrorText(error.value!),
         ],
+        if (editing != null) ...[
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            editing.isArchived
+                ? 'project.archived_hint'.tr()
+                : 'project.archive_hint'.tr(),
+            style: AppTypography.bodySm.copyWith(color: colors.textSecondary),
+          ),
+        ],
         const SizedBox(height: AppSpacing.lg),
         AppFillButton(
           label: 'common.save'.tr(),
           onPressed: busy.value ? null : save,
         ),
+        if (editing != null)
+          TextButton(
+            onPressed: busy.value
+                ? null
+                : () => run(
+                    () => ref
+                        .read(ledgerProvider.notifier)
+                        .saveProject(
+                          editing.withArchived(isArchived: !editing.isArchived),
+                        ),
+                  ),
+            child: Text(
+              editing.isArchived
+                  ? 'project.unarchive'.tr()
+                  : 'project.archive'.tr(),
+            ),
+          ),
         if (editing != null)
           TextButton(
             onPressed: busy.value ? null : delete,
