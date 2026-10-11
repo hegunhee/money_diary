@@ -4,6 +4,7 @@ import 'package:money_diary/core/themes/app_colors.dart';
 import 'package:money_diary/core/themes/app_spacing.dart';
 import 'package:money_diary/core/themes/app_typography.dart';
 import 'package:money_diary/shared/models/ledger_book.dart';
+import 'package:money_diary/shared/models/ledger_entry.dart';
 import 'package:money_diary/shared/models/ledger_summary.dart';
 import 'package:money_diary/shared/util/ledger_labels.dart';
 import 'package:money_diary/shared/widgets/app_badge.dart';
@@ -18,6 +19,7 @@ class RecentEntriesSection extends StatelessWidget {
     required this.book,
     required this.today,
     required this.onSeeAll,
+    required this.onEntryTap,
     super.key,
   });
 
@@ -29,6 +31,9 @@ class RecentEntriesSection extends StatelessWidget {
   final DateTime today;
 
   final VoidCallback onSeeAll;
+
+  /// 거래 줄을 눌렀을 때의 동작
+  final ValueChanged<LedgerEntry> onEntryTap;
 
   String _dayLabel(DateTime date) {
     final gap = DateTime(
@@ -150,7 +155,11 @@ class RecentEntriesSection extends StatelessWidget {
                       endIndent: AppSpacing.lg,
                       color: colors.divider.withValues(alpha: 0.3),
                     ),
-                  LedgerEntryRow(entry: entry, book: book),
+                  LedgerEntryRow(
+                    entry: entry,
+                    book: book,
+                    onTap: () => onEntryTap(entry),
+                  ),
                 ],
               ],
             ),

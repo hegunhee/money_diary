@@ -167,7 +167,9 @@
       "same_asset": "The two accounts are the same.",
       "save": "Couldn't save. Please try again."
     },
-    "asset_empty": "Add an account in Settings first."
+    "asset_empty": "Add an account in Settings first.",
+    "title_edit": "Edit record",
+    "delete_confirm": "Delete this record? Account balances will be restored too."
   },
   "report": {
     "net_saving": "Net savings this month",

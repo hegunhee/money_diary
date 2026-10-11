@@ -14,11 +14,19 @@ import 'package:money_diary/shared/widgets/ledger_entry_row.dart';
 
 /// 하루치 거래를 날짜 머리줄과 카드로 보여 주는 구역
 class DailyLedgerSection extends StatelessWidget {
-  const DailyLedgerSection({required this.day, required this.book, super.key});
+  const DailyLedgerSection({
+    required this.day,
+    required this.book,
+    required this.onEntryTap,
+    super.key,
+  });
 
   final DailyLedger day;
 
   final LedgerBook book;
+
+  /// 거래 줄을 눌렀을 때의 동작
+  final ValueChanged<LedgerEntry> onEntryTap;
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +82,11 @@ class DailyLedgerSection extends StatelessWidget {
                   color: entry.type == EntryType.transfer
                       ? colors.surfaceLow
                       : colors.surface,
-                  child: LedgerEntryRow(entry: entry, book: book),
+                  child: LedgerEntryRow(
+                    entry: entry,
+                    book: book,
+                    onTap: () => onEntryTap(entry),
+                  ),
                 ),
               ],
             ],

@@ -69,6 +69,14 @@ class LedgerRepository {
     });
   }
 
+  /// 거래 한 건을 지우고, 잔액을 되돌린 자산을 함께 저장합니다.
+  Future<void> deleteEntry(String id, List<AssetAccount> assets) async {
+    await (await _box(_entries)).delete(id);
+    await (await _box(_assets)).putAll({
+      for (final asset in assets) asset.id: asset.toJson(),
+    });
+  }
+
   /// 자산 하나를 더하거나 고쳐 저장합니다.
   Future<void> saveAsset(AssetAccount asset) async {
     await (await _box(_assets)).put(asset.id, asset.toJson());

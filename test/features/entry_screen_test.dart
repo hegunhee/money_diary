@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money_diary/features/entry/models/entry_form_error.dart';
 import 'package:money_diary/features/entry/screens/entry_screen.dart';
+import 'package:money_diary/shared/controllers/ledger_controller.dart';
 import 'package:money_diary/shared/models/ledger_entry.dart';
+import 'package:money_diary/shared/util/sample_ledger.dart';
 
 import '../helpers/pump_app.dart';
 
@@ -52,5 +55,39 @@ void main() {
     expect(saved.title, '교통/차량');
     expect(find.text('금액을 입력해 주세요.'), findsNothing);
     expect(find.text('40,000'), findsNothing);
+  });
+
+  testWidgets('거래를 고치면 예전 잔액을 되돌리고 새 금액으로 다시 반영한다', (tester) async {
+    tester.view.physicalSize = const Size(430, 2400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final book = buildSampleLedger(designToday);
+    // 삼진어묵 18,200원 · 카카오뱅크(잔액 1,500,000)
+    final target = book.entries.firstWhere((entry) => entry.title == '삼진어묵');
+    final repository = await pumpApp(
+      tester,
+      Consumer(
+        builder: (context, ref, _) => Column(
+          children: [
+            Text(
+              'kakao ${ref.watch(ledgerProvider).value?.assetById('kakao-bank')?.balance}',
+            ),
+            Expanded(child: EntryScreen(entry: target)),
+          ],
+        ),
+      ),
+    );
+    expect(find.text('내역 수정'), findsOneWidget);
+    expect(find.text('18,200'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField).first, '20000');
+    await tester.pump();
+    await tester.tap(find.text('저장하기'));
+    await tester.pump();
+
+    expect(repository.saved.single.id, target.id);
+    expect(repository.saved.single.amount, 20000);
+    expect(repository.saved.single.detail, '외식');
+    expect(find.text('kakao ${1500000 + 18200 - 20000}'), findsOneWidget);
   });
 }

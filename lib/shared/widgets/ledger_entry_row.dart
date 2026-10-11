@@ -7,17 +7,26 @@ import 'package:money_diary/shared/models/ledger_book.dart';
 import 'package:money_diary/shared/models/ledger_entry.dart';
 import 'package:money_diary/shared/util/ledger_labels.dart';
 import 'package:money_diary/shared/widgets/app_badge.dart';
+import 'package:money_diary/shared/widgets/app_tap_row.dart';
 
 /// 거래 한 건을 보여 주는 줄. 홈과 내역이 함께 씁니다.
 ///
 /// 종류는 아이콘 바탕·금액 색·부호로 구분합니다. 이체는 수입·지출 색을 쓰지 않습니다.
 class LedgerEntryRow extends StatelessWidget {
-  const LedgerEntryRow({required this.entry, required this.book, super.key});
+  const LedgerEntryRow({
+    required this.entry,
+    required this.book,
+    this.onTap,
+    super.key,
+  });
 
   final LedgerEntry entry;
 
   /// 자산·프로젝트 이름을 찾을 가계부
   final LedgerBook book;
+
+  /// 줄을 눌렀을 때의 동작. null이면 누를 수 없습니다.
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -48,90 +57,93 @@ class LedgerEntryRow extends StatelessWidget {
         ?book.assetById(entry.assetId)?.name,
     ].join(' · ');
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.lg,
-        vertical: AppSpacing.md,
-      ),
-      child: Row(
-        children: [
-          DecoratedBox(
-            decoration: BoxDecoration(color: tint, shape: BoxShape.circle),
-            child: SizedBox.square(
-              dimension: 44,
-              child: Icon(
-                entry.type == EntryType.transfer
-                    ? Icons.swap_horiz
-                    : (category ?? LedgerCategory.etc).icon,
-                size: 22,
-                color: accent,
+    return AppTapRow(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.md,
+        ),
+        child: Row(
+          children: [
+            DecoratedBox(
+              decoration: BoxDecoration(color: tint, shape: BoxShape.circle),
+              child: SizedBox.square(
+                dimension: 44,
+                child: Icon(
+                  entry.type == EntryType.transfer
+                      ? Icons.swap_horiz
+                      : (category ?? LedgerCategory.etc).icon,
+                  size: 22,
+                  color: accent,
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        entry.title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTypography.bodyLg.copyWith(
-                          color: colors.textPrimary,
-                          fontWeight: FontWeight.w600,
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          entry.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypography.bodyLg.copyWith(
+                            color: colors.textPrimary,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
-                    ),
-                    if (badge != null) ...[
-                      const SizedBox(width: 6),
-                      AppBadge(
-                        badge,
-                        background: entry.type == EntryType.transfer
-                            ? colors.transferTint
-                            : null,
-                        foreground: entry.type == EntryType.transfer
-                            ? colors.transfer
-                            : null,
-                      ),
+                      if (badge != null) ...[
+                        const SizedBox(width: 6),
+                        AppBadge(
+                          badge,
+                          background: entry.type == EntryType.transfer
+                              ? colors.transferTint
+                              : null,
+                          foreground: entry.type == EntryType.transfer
+                              ? colors.transfer
+                              : null,
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
+                  Text(
+                    subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.bodySm.copyWith(
+                      color: colors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  signedWonLabel(entry.type, entry.amount),
+                  style: AppTypography.amountLg.copyWith(
+                    color: entry.type == EntryType.transfer
+                        ? colors.textPrimary
+                        : accent,
+                  ),
                 ),
                 Text(
-                  subtitle,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTypography.bodySm.copyWith(
+                  timeLabel(entry.occurredAt),
+                  style: AppTypography.labelMd.copyWith(
                     color: colors.textSecondary,
                   ),
                 ),
               ],
             ),
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                signedWonLabel(entry.type, entry.amount),
-                style: AppTypography.amountLg.copyWith(
-                  color: entry.type == EntryType.transfer
-                      ? colors.textPrimary
-                      : accent,
-                ),
-              ),
-              Text(
-                timeLabel(entry.occurredAt),
-                style: AppTypography.labelMd.copyWith(
-                  color: colors.textSecondary,
-                ),
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
