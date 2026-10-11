@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-secondary": "#ffffff", "primary": "#3525cd", "on-surface": "#131b2e", "tertiary-fixed": "#dbe1ff", "on-surface-variant": "#464555", "tertiary": "#003fac", "surface": "#faf8ff", "tertiary-container": "#0555dd", "on-secondary-container": "#fffbff", "surface-dim": "#d2d9f4", "on-primary": "#ffffff", "tertiary-fixed-dim": "#b4c5ff", "secondary": "#b90538", "primary-fixed": "#e2dfff", "on-primary-container": "#dad7ff", "surface-bright": "#faf8ff", "surface-container-low": "#f2f3ff", "on-secondary-fixed-variant": "#92002a", "on-background": "#131b2e", "on-tertiary-fixed": "#00174b", "secondary-fixed-dim": "#ffb2b7", "background": "#faf8ff", "secondary-container": "#dc2c4f", "surface-variant": "#dae2fd", "surface-container-highest": "#dae2fd", "on-error": "#ffffff", "primary-fixed-dim": "#c3c0ff", "on-error-container": "#93000a", "secondary-fixed": "#ffdadb", "inverse-on-surface": "#eef0ff", "surface-container-high": "#e2e7ff", "on-tertiary": "#ffffff", "primary-container": "#4f46e5", "on-tertiary-fixed-variant": "#003ea8", "outline": "#777587", "outline-variant": "#c7c4d8", "on-tertiary-container": "#d1daff", "on-primary-fixed-variant": "#3323cc", "error-container": "#ffdad6", "surface-container-lowest": "#ffffff", "on-primary-fixed": "#0f0069", "inverse-surface": "#283044", "surface-tint": "#4d44e3", "inverse-primary": "#c3c0ff", "surface-container": "#eaedff", "on-secondary-fixed": "#40000d", "error": "#ba1a1a" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-sm": "0.5rem", "space-xs": "0.25rem", "space-xl": "1.5rem", "gutter": "1rem", "space-2xl": "2rem", "margin-tablet": "1.5rem", "gutter-mobile": "0.75rem", "space-lg": "1rem", "margin": "1rem", "space-md": "0.75rem" }, fontFamily: { "label-sm": ["Inter"], "amount-md": ["Inter"], "body-md": ["Inter"], "body-lg": ["Inter"], "headline-lg": ["Inter"], "amount-lg": ["Inter"], "display-currency": ["Inter"], "display-currency-mobile": ["Inter"], "body-sm": ["Inter"], "headline-md": ["Inter"], "headline-sm": ["Inter"], "label-md": ["Inter"] }, fontSize: { "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600" }], "amount-md": ["15px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }], "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }], "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "amount-lg": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "display-currency": ["34px", { "lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "display-currency-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.005em", "fontWeight": "400" }], "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-sm": ["17px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }] } } } }</script><style>@layer base{html,body{width:100%;margin:0;padding:0;}body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:max(env(safe-area-inset-bottom,0px),0.75rem);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface text-on-surface antialiased flex flex-col min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed"><header class="fixed top-0 inset-x-0 z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-gutter flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="Pocket Ledger Brand Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UahPKqmcQ6yi_RaJ6RUt91jSupIAT7xDc5JpX0k7PhXrmMJdITapIQ4wR1kWK9d5NcWkbNPpX_gfUxWI7ExUYqldP3w5uSXinqRrJwGzCmNGx8AqOuxiCBj4dDq1g0BWap79JfJZjClqqo9SqOjEidVuEBnV6PtMjmJD3cneIxYWndU42oV6BQoZ5-4YeiWIwBxVPdIJWDrKLxc-wHG00C4dXa4yJX1zQx-Gs24j1PR3dF3uf5t1bw8MPO"/><div class="flex flex-col"><div class="flex items-center gap-1.5"><span class="font-headline-sm text-headline-sm text-on-surface font-semibold tracking-tight">포켓가계부</span><span class="px-1.5 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm">Home</span></div><span class="font-label-md text-label-md text-on-surface-variant">Pocket Ledger</span></div></div><div class="flex items-center gap-space-sm"><button aria-label="월별 기간 선택" class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface transition-colors active:bg-surface-container" type="button"><span class="material-symbols-outlined text-[22px]">calendar_month</span></button><button aria-label="알림" class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface transition-colors active:bg-surface-container" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-24 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- Month Selector & Delightful Date Header -->
+<div class="px-gutter pt-space-md pb-space-sm flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<button aria-label="이전 달 이동" class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface active:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button class="flex items-center gap-1.5 px-space-md py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface transition-all active:scale-95" id="monthDropdownTrigger" type="button">
+<span class="font-headline-sm text-headline-sm font-semibold tracking-tight">2026년 3월</span>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant transition-transform" id="monthDropdownIcon">arrow_drop_down</span>
+</button>
+<button aria-label="다음 달 이동" class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:text-on-surface active:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+<div class="flex items-center gap-1 bg-surface-container-low px-2.5 py-1 rounded-full">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">정산 완료</span>
+</div>
+</div>
+<div class="px-gutter flex flex-col gap-space-lg pt-space-xs">
+<!-- Total Asset Summary Card -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-lowest p-space-xl shadow-sm">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-1.5">
+<span class="font-label-md text-label-md text-on-surface-variant">총 순자산</span>
+<button aria-label="자산 숨기기" class="text-on-surface-variant hover:text-on-surface flex items-center" type="button">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+</button>
+</div>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[13px]">trending_up</span>
+          전월 대비 +820,000원 (+4.6%)
+        </span>
+</div>
+<div class="flex items-baseline gap-1.5 mb-space-lg">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">₩</span>
+<span class="font-display-currency-mobile text-display-currency-mobile font-bold tracking-tight text-on-surface">18,450,200</span>
+</div>
+<!-- Asset breakdown pills -->
+<div class="flex flex-wrap gap-1.5 pt-space-sm">
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-low text-on-surface-variant font-label-md text-label-md">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span>보통예금</span>
+<span class="font-amount-md text-amount-md text-on-surface font-semibold">12,300,000</span>
+</div>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-low text-on-surface-variant font-label-md text-label-md">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span>투자·청약</span>
+<span class="font-amount-md text-amount-md text-on-surface font-semibold">4,850,000</span>
+</div>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-low text-on-surface-variant font-label-md text-label-md">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<span>현금</span>
+<span class="font-amount-md text-amount-md text-on-surface font-semibold">1,300,200</span>
+</div>
+</div>
+</div>
+<!-- Monthly Flow & Savings Ratio Card -->
+<div class="rounded-xl bg-surface-container-lowest p-space-xl shadow-sm flex flex-col gap-space-lg">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface">3월 현황</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">18일차</span>
+</div>
+<div class="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm">
+<span>저축률 48.6% 달성</span>
+</div>
+</div>
+<!-- Dual Metric Flow -->
+<div class="grid grid-cols-2 gap-space-md">
+<!-- Income -->
+<div class="rounded-lg bg-surface-container-low p-space-md flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant">총 수입</span>
+<div class="w-5 h-5 rounded-full bg-surface-container-highest flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+</div>
+</div>
+<span class="font-amount-lg text-amount-lg font-bold text-tertiary">+ 4,250,000<span class="font-label-md text-label-md font-normal text-on-surface-variant ml-0.5">원</span></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">목표 대비 100%</span>
+</div>
+<!-- Expense -->
+<div class="rounded-lg bg-surface-container-low p-space-md flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant">총 지출</span>
+<div class="w-5 h-5 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+</div>
+</div>
+<span class="font-amount-lg text-amount-lg font-bold text-secondary">- 2,184,500<span class="font-label-md text-label-md font-normal text-on-surface-variant ml-0.5">원</span></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">권장 예산의 54.6%</span>
+</div>
+</div>
+<!-- Net Flow Indicator -->
+<div class="flex items-center justify-between px-space-md py-2.5 rounded-lg bg-surface-container">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">savings</span>
+<span class="font-body-md text-body-md font-medium text-on-surface">이번 달 모은 돈</span>
+</div>
+<span class="font-amount-lg text-amount-lg font-bold text-primary">₩ 2,065,500</span>
+</div>
+</div>
+<!-- Quick Action Launchpad -->
+<div class="grid grid-cols-4 gap-2">
+<button class="group flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl bg-surface-container-lowest hover:bg-surface-container-low active:scale-95 transition-all shadow-sm" type="button">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[20px]">remove</span>
+</div>
+<span class="font-label-md text-label-md font-medium text-on-surface">지출 입력</span>
+</button>
+<button class="group flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl bg-surface-container-lowest hover:bg-surface-container-low active:scale-95 transition-all shadow-sm" type="button">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</div>
+<span class="font-label-md text-label-md font-medium text-on-surface">수입 입력</span>
+</button>
+<button class="group flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl bg-surface-container-lowest hover:bg-surface-container-low active:scale-95 transition-all shadow-sm" type="button">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[20px]">sync_alt</span>
+</div>
+<span class="font-label-md text-label-md font-medium text-on-surface">이체 기록</span>
+</button>
+<button class="group flex flex-col items-center justify-center gap-1.5 py-3 rounded-xl bg-surface-container-lowest hover:bg-surface-container-low active:scale-95 transition-all shadow-sm" type="button">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+</div>
+<span class="font-label-md text-label-md font-medium text-on-surface">예산 관리</span>
+</button>
+</div>
+<!-- Active Project Tracker Card -->
+<div class="rounded-xl bg-surface-container-lowest p-space-xl shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-lg bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[16px]">flight_takeoff</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface">2026 일본 여행</span>
+<span class="px-1.5 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm">진행중</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">2026.04.10 ~ 04.15 (D-28)</span>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-0.5 text-label-md font-label-md" type="button">
+          상세
+          <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+<!-- Visual Budget Progress -->
+<div class="flex flex-col gap-1.5 pt-1">
+<div class="flex items-center justify-between font-label-md text-label-md">
+<span class="text-on-surface-variant">누적 사용 45.3%</span>
+<span class="font-semibold text-on-surface">₩ 680,000 <span class="font-normal text-on-surface-variant">/ ₩ 1,500,000</span></span>
+</div>
+<div class="w-full h-2.5 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full rounded-full bg-primary transition-all duration-500" style="width: 45.3%"></div>
+</div>
+<div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>남은 예산 ₩ 820,000</span>
+<span>일일 권장 ₩ 164,000</span>
+</div>
+</div>
+</div>
+<!-- Recent Transactions Section -->
+<div class="flex flex-col gap-space-sm mb-space-2xl">
+<div class="flex items-center justify-between px-1">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface">최근 가계부 내역</span>
+<span class="w-5 h-5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm flex items-center justify-center font-semibold">4</span>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-0.5 font-label-md text-label-md" type="button">
+          전체보기
+          <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+<!-- Transactions grouped by date -->
+<div class="flex flex-col gap-space-md">
+<!-- Date Group: 오늘 -->
+<div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm flex flex-col gap-space-xs">
+<!-- Day Header -->
+<div class="flex items-center justify-between py-1.5 px-2 rounded-lg bg-surface-container-low mb-1">
+<span class="font-label-md text-label-md font-semibold text-on-surface">오늘 · 3월 18일 화</span>
+<span class="font-amount-md text-amount-md font-semibold text-secondary">- 24,700원</span>
+</div>
+<!-- Transaction 1: 스타벅스 (Project tagged) -->
+<div class="flex items-center justify-between p-2 rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined text-[20px]">local_cafe</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 truncate">
+<span class="font-body-md text-body-md font-semibold text-on-surface truncate">스타벅스 리저브</span>
+<span class="px-1.5 py-0.2 rounded-full bg-primary-fixed text-primary font-label-sm text-label-sm shrink-0">일본 여행</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">식비/카페 · 현대카드 ZERO</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0 pl-2">
+<span class="font-amount-lg text-amount-lg font-bold text-secondary">-6,500원</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">14:28</span>
+</div>
+</div>
+<div class="h-[1px] bg-surface-container mx-2 my-0.5"></div>
+<!-- Transaction 2: 삼진어묵 -->
+<div class="flex items-center justify-between p-2 rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined text-[20px]">restaurant</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-md text-body-md font-semibold text-on-surface truncate">삼진어묵</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">식비/외식 · 카카오뱅크 체크카드</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0 pl-2">
+<span class="font-amount-lg text-amount-lg font-bold text-secondary">-18,200원</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">12:15</span>
+</div>
+</div>
+<div class="h-[1px] bg-surface-container mx-2 my-0.5"></div>
+<!-- Transaction 3: 이체 -->
+<div class="flex items-center justify-between p-2 rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant shrink-0">
+<span class="material-symbols-outlined text-[20px]">swap_horiz</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 truncate">
+<span class="font-body-md text-body-md font-semibold text-on-surface truncate">토스뱅크 → 카카오뱅크</span>
+<span class="px-1.5 py-0.2 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm shrink-0">이체</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">자산이동 · 생활비 통장 충전</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0 pl-2">
+<span class="font-amount-lg text-amount-lg font-bold text-on-surface">200,000원</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">09:10</span>
+</div>
+</div>
+</div>
+<!-- Date Group: 어제 -->
+<div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm flex flex-col gap-space-xs">
+<!-- Day Header -->
+<div class="flex items-center justify-between py-1.5 px-2 rounded-lg bg-surface-container-low mb-1">
+<span class="font-label-md text-label-md font-semibold text-on-surface">어제 · 3월 17일 월</span>
+<span class="font-amount-md text-amount-md font-semibold text-tertiary">+ 3,850,000원</span>
+</div>
+<!-- Transaction 4: 급여 수입 -->
+<div class="flex items-center justify-between p-2 rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary shrink-0">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5 truncate">
+<span class="font-body-md text-body-md font-semibold text-on-surface truncate">주식회사 넥스트</span>
+<span class="px-1.5 py-0.2 rounded-full bg-tertiary-fixed text-tertiary font-label-sm text-label-sm shrink-0">정기급여</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">수입 · 신한 주거래통장</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0 pl-2">
+<span class="font-amount-lg text-amount-lg font-bold text-tertiary">+3,850,000원</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">10:00</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Simple micro-interaction for dropdown trigger
+  document.getElementById('monthDropdownTrigger')?.addEventListener('click', function() {
+    const icon = document.getElementById('monthDropdownIcon');
+    if (icon) {
+      icon.classList.toggle('rotate-180');
+    }
+  });
+</script></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-1px_12px_rgba(0,0,0,0.05)]" data-active-classes="text-primary font-semibold"><div class="flex justify-around items-center h-16 px-gutter-mobile"><a aria-current="page" class="flex flex-col items-center justify-center gap-0.5 min-w-[44px] min-h-[44px] px-space-xs transition-colors text-primary font-semibold" data-path="home" href="#"><span class="material-symbols-outlined text-[24px]">home</span><span class="font-label-md text-label-md">홈</span></a><a class="flex flex-col items-center justify-center gap-0.5 min-w-[44px] min-h-[44px] px-space-xs text-on-surface-variant transition-colors hover:text-on-surface" data-path="transactions" href="#"><span class="material-symbols-outlined text-[24px]">receipt_long</span><span class="font-label-md text-label-md">내역</span></a><a class="flex flex-col items-center justify-center gap-0.5 min-w-[44px] min-h-[44px] px-space-xs text-on-surface-variant transition-colors hover:text-on-surface" data-path="analytics" href="#"><span class="material-symbols-outlined text-[24px]">pie_chart</span><span class="font-label-md text-label-md">분석</span></a><a class="flex flex-col items-center justify-center gap-0.5 min-w-[44px] min-h-[44px] px-space-xs text-on-surface-variant transition-colors hover:text-on-surface" data-path="projects" href="#"><span class="material-symbols-outlined text-[24px]">folder</span><span class="font-label-md text-label-md">프로젝트</span></a><a class="flex flex-col items-center justify-center gap-0.5 min-w-[44px] min-h-[44px] px-space-xs text-on-surface-variant transition-colors hover:text-on-surface" data-path="settings" href="#"><span class="material-symbols-outlined text-[24px]">settings</span><span class="font-label-md text-label-md">설정</span></a></div></nav></body></html>

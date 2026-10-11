@@ -1,643 +1,149 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Claude Code(claude.ai/code)가 이 레포에서 작업할 때 따르는 가이드입니다.
 
-## Project Overview
+## 프로젝트 개요
 
-Blueberry Template is a Flutter starter template (Korean-language project) with clean architecture, Material 3 theming, Riverpod 3.0 state management, easy_localization, and Firebase Crashlytics.
+**포켓가계부(Pocket Ledger)** — 수입·지출·이체를 기록하는 가계부 앱(iOS · Android).
+Flutter 단일 모듈이며 패키지 이름은 `money_diary` 입니다. **서버 없이 기기의 로컬 DB**에
+저장합니다.
 
-- **Flutter Version:** 3.35.6 (managed via FVM)
-- **Primary Language:** Korean (documentation and comments in Korean)
-- **State Management:** Riverpod 3.0
-- **Min SDK:** 3.8.1
+- **Flutter 3.41.9**. 로컬은 FVM(`.fvmrc`), CI는 `subosito/flutter-action` 의
+  `flutter-version`. 버전을 올릴 땐 `.fvmrc` 와 모든 워크플로의 `flutter-version` 을 함께 수정.
+- 상태관리 **Riverpod 3** + **flutter_hooks** (`HookConsumerWidget`, `hooks_riverpod`).
+- 다국어 easy_localization (`ko` 기본 · `en`).
+- 엔트리포인트는 `lib/main.dart` 하나.
+- 언어: 문서·주석 모두 **한국어**.
+- 구조·패턴 상세는 [ARCHITECTURE.md](ARCHITECTURE.md), 실행 방법은 [README.md](README.md).
+- 디자인 기준은 [docs/design/DESIGN.md](docs/design/DESIGN.md) 와 `docs/design/screens/`
+  의 화면별 시안(`screen.png` · `code.html`).
 
-## Development Commands
-
-### Setup & Dependencies
-
-```bash
-# Install Flutter version via FVM (required for this project)
-fvm install
-
-# Install dependencies
-fvm flutter pub get
-
-# Add new packages (always use this instead of manual pubspec.yaml edits)
-fvm flutter pub add package_name
-fvm flutter pub add package_name --dev  # for dev dependencies
-```
-
-### Running & Testing
-
-```bash
-# Run the app
-fvm flutter run
-
-# Run tests with coverage
-flutter test --coverage
-
-# Run a specific test file
-flutter test test/path/to/test_file.dart
-
-# Run a specific test by name
-flutter test --name "test name"
-
-# Lint analysis
-flutter analyze --no-fatal-infos
-
-# Format code
-dart format .
-
-# Build Android APK
-flutter build apk
-```
-
-### Code Generation (when using freezed, json_serializable, etc.)
-
-```bash
-fvm flutter pub run build_runner build --delete-conflicting-outputs
-```
-
-## Architecture Overview
-
-### Feature-Based Modular Structure
-
-This codebase follows a **feature-first architecture** where each feature is self-contained:
+## 구조 (feature-first)
 
 ```
 lib/
-├── core/              # Global app concerns
-│   ├── controllers/   # Global state (e.g., ThemeController)
-│   └── themes/        # Design system (AppColors, AppTypography, AppTheme)
-└── features/          # Feature modules (isolated & independent)
-    ├── todo/
-    ├── github/
-    └── [feature]/
-        ├── controllers/  # Riverpod state management
-        ├── models/       # Data models
-        ├── screens/      # UI screens
-        ├── widgets/      # Feature-specific widgets (optional)
-        └── repositories/ # API/data layer (optional - see guidelines below)
+├── core/                 # 의존성 없이 앱 전체 적용되는 leaf 코드
+│   └── themes/           # AppPalette · AppColors · AppTypography · AppSpacing · AppRadius · AppLayout · AppTheme
+├── shared/               # 여러 feature에서 중복되는 컴포넌트·코드
+│   └── widgets/          # 공용 UI
+└── features/<feature>/
+    ├── models/           # 데이터 모델
+    ├── repositories/     # 로컬 DB 읽기·쓰기
+    ├── controllers/      # 상태 (Riverpod)
+    ├── screens/
+    └── widgets/          # 이 feature 전용
 ```
 
-### When to Create a Repository Layer
+의존은 `features → shared → core` 한 방향(역방향 금지). **core** = 의존성 없이 앱 전체
+적용되는 기능, **shared** = 여러 feature에서 중복되는 컴포넌트·코드. 폴더는 필요해질 때
+만듭니다(빈 폴더를 미리 두지 않음).
 
-**Create `repositories/` when:**
-- Making REST API calls (see `features/github/repositories/github_repository.dart` as example)
-- Implementing GraphQL queries
-- Working with local databases (SQLite, Hive)
-- Need to abstract complex data operations shared across multiple controllers
-- Using Firebase/Supabase SDKs but want to organize code better (코드 정리 목적으로 Repository 생성 가능)
+## Provider 규칙
 
-**Skip `repositories/` when:**
-- Managing simple UI state only
-- The abstraction doesn't add value (YAGNI 원칙)
-
-**Example: REST API pattern (github feature)**
-
-```dart
-// ✅ Repository 계층 (features/github/repositories/github_repository.dart)
-class GitHubRepository {
-  static const _baseUrl = 'https://api.github.com';
-
-  Future<GithubRepoModel> getRepo({
-    required String owner,
-    required String repo,
-  }) async {
-    final url = Uri.parse('$_baseUrl/repos/$owner/$repo');
-    final response = await http.get(url);
-
-    if (response.statusCode != 200) {
-      throw Exception('Failed to load repository: ${response.statusCode}');
-    }
-
-    final data = jsonDecode(response.body) as Map<String, dynamic>;
-    return GithubRepoModel.fromJson(data);
-  }
-}
-
-// ✅ Controller에서 Repository 사용 (features/github/controllers/github_controller.dart)
-final githubProvider = AsyncNotifierProvider<GitHubNotifier, GithubRepoModel>(
-  GitHubNotifier.new,
-);
-
-class GitHubNotifier extends AsyncNotifier<GithubRepoModel> {
-  final _repository = GitHubRepository();
-
-  @override
-  Future<GithubRepoModel> build() {
-    return _repository.getRepo(owner: 'blueberry-team', repo: 'blueberry_template');
-  }
-
-  Future<void> refresh() async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(
-      () => _repository.getRepo(owner: 'blueberry-team', repo: 'blueberry_template'),
-    );
-  }
-}
-```
-
-### Provider 작성 규칙
-
-**동기(Synchronous) 상태 - NotifierProvider**
+- 동기 상태 → `NotifierProvider`, 비동기 상태 → `AsyncNotifierProvider`.
+- 컨트롤러 상태는 **모델 그대로** — `LedgerEntry` · `List<LedgerEntry>` ·
+  `AsyncValue<List<LedgerEntry>>`.
+  감싸는 State 클래스 금지(예외는 아래 모델 참고).
+- 화면에서만 쓰는 값(탭 · 입력값 · 펼침 · 임시 편집값 · 진행 중 플래그 · 애니메이션)은
+  `HookConsumerWidget`(ref 불필요하면 `HookWidget`)의 `useState` ·
+  `useTextEditingController` · `useAnimationController` 등 훅으로.
+- ❌ `StateNotifierProvider`(구식) · `FutureProvider`(단순한 경우 외) · `setState` ·
+  `StatefulWidget`(훅으로 대체) · `provider` 패키지 금지.
+- Provider 변수명은 camelCase + `Provider` 접미사.
 
 ```dart
-// ✅ GOOD: 동기 상태는 NotifierProvider 사용
-final todoProvider = NotifierProvider<TodoController, List<Todo>>(
-  TodoController.new,
-);
-
-class TodoController extends Notifier<List<Todo>> {
-  @override
-  List<Todo> build() => [];  // 동기 초기값
-
-  void add(String title) {
-    state = [...state, Todo(title)];
-  }
-}
-```
-
-**비동기(Asynchronous) 상태 - AsyncNotifierProvider**
-
-```dart
-// ✅ GOOD: 비동기 상태는 AsyncNotifierProvider 사용
-final userProvider = AsyncNotifierProvider<UserController, User?>(
-  UserController.new,
-);
-
-class UserController extends AsyncNotifier<User?> {
-  final _userRepository = UserRepository();
-  final _authRepository = AuthRepository();
-
-  @override
-  Future<User?> build() async {
-    // 비동기 초기화 (API 호출, DB 읽기 등)
-    return await _userRepository.getCurrentUser();
-  }
-
-  Future<void> signIn(String email, String password) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      return await _authRepository.signIn(email, password);
-    });
-  }
-
-  Future<void> signOut() async {
-    state = const AsyncLoading();
-    await _authRepository.signOut();
-    state = const AsyncData(null);
-  }
-}
-```
-
-**사용 예시:**
-
-```dart
-// 동기 Provider
-final todos = ref.watch(todoProvider);
-
-// 비동기 Provider
-final userAsync = ref.watch(userProvider);
-userAsync.when(
-  data: (user) => Text(user?.name ?? 'Guest'),
-  loading: () => CircularProgressIndicator(),
-  error: (err, stack) => Text('Error: $err'),
-);
-```
-
-**❌ BAD: 구식 패턴**
-```dart
-// StateNotifierProvider (Riverpod 2.0 이전)
-final todoProvider = StateNotifierProvider<TodoController, List<Todo>>(...);
-
-// FutureProvider (간단한 경우 외에는 AsyncNotifierProvider 사용 권장)
-final userProvider = FutureProvider<User?>(...);
-```
-
-### Riverpod 3.0 주요 기능
-
-**자동 재시도 (Automatic Retry)**
-- Provider 초기화 실패 시 자동으로 exponential backoff로 재시도
-- 네트워크 일시적 문제 해결에 유용
-
-**Mutations (실험적)**
-- UI에서 side effect 처리 (form 제출, 저장 등)
-- loading/error 상태 자동 관리
-
-**오프라인 지속성 (실험적)**
-- Provider 데이터 로컬 캐싱
-- 앱 재시작 시 복원
-
-```dart
-// 예: Mutation 사용
-final saveTodoMutation = Mutation<void, String>(
-  (ref, title) async {
-    final todoRepository = TodoRepository();
-    await todoRepository.save(title);
-  },
-);
-
-// Widget에서 사용
-ref.read(saveTodoMutation).future('New todo');
-if (saveTodoMutation.isLoading) CircularProgressIndicator();
-```
-
-### Widget에서 사용
-
-```dart
-// ✅ GOOD: ConsumerWidget 사용
-class MyScreen extends ConsumerWidget {
-  const MyScreen({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final todos = ref.watch(todoProvider);
-
-    return ListView.builder(
-      itemCount: todos.length,
-      itemBuilder: (context, i) => TodoItem(todos[i]),
-    );
-  }
-}
-
-// ✅ GOOD: 메서드 호출
-ref.read(todoProvider.notifier).add('New todo');
+final ledgerProvider =
+    AsyncNotifierProvider<LedgerController, List<LedgerEntry>>(LedgerController.new);
 ```
 
 ## 디자인 시스템
 
-### 색상 사용
+- 색: `context.colors` (ThemeExtension 기반 `AppColors`). 하드코딩 색 금지. 원시 hex 는
+  `AppPalette` 에만 둡니다. 투명도는 `withValues(alpha:)` (`withOpacity` 금지).
+- 수입·지출·이체는 색으로 구분합니다: `colors.income` · `colors.expense` · `colors.transfer`
+  (옅은 바탕은 `*Tint`). 금액에는 부호(`+` · `-`)를 함께 적고, 이체는 수입·지출 색을 쓰지 않습니다.
+- 타이포: `AppTypography` (`displayCurrency*` · `headlineLg/Md/Sm` · `bodyLg/Md/Sm` ·
+  `amountLg/Md` · `labelMd/Sm`). 직접 `fontSize` 금지. 금액은 고정폭 숫자가 켜진
+  `displayCurrency*` · `amount*` 토큰으로 적습니다. 폰트는 Pretendard.
+- 간격: `AppSpacing` (`xs`=4 · `sm`=8 · `md`=12 · `lg`=16 · `xl`=24 · `xxl`=32), 모서리는
+  `AppRadius`. 탭 대상은 최소 44×44(`AppLayout.minTouchTarget`). 태블릿 폭은
+  `AppContentWidth`.
+- 문자열: `'key'.tr()` (하드코딩 문자열 금지). 키는 `feature.component.text`. 키를 더하면
+  `ko.json` · `en.json` 양쪽에 넣습니다(`test/translations_parity_test.dart` 가 확인).
+- 누름 반응: 목록의 줄은 `AppTapRow`, 카드·알약·아이콘은 `AppPressScale`.
+- 피드백은 스낵바를 기본으로 쓰지 않습니다. 입력 오류는 필드 근처(`InlineErrorText`),
+  저장 실패와 재시도는 해당 작업 영역 안(`AppErrorView`)에 표시합니다. 성공은 다음
+  화면이나 저장된 상태로 충분하면 별도 메시지를 띄우지 않습니다. 다이얼로그는 명시적
+  결정이 필요한 경우만 사용합니다.
+- 삭제처럼 되돌릴 수 없는 동작은 확인 창을 거칩니다.
+- 이미 읽은 값이 있으면 다시 읽는 동안 그대로 둡니다. 스켈레톤·로딩은 처음 읽을 때만.
 
-프로젝트는 **ThemeExtension 기반 커스텀 색상 시스템**을 사용합니다.
+## 네이밍
 
-**현재 정의된 AppColors:**
-- `surface`, `textPrimary`, `textSecondary`
-- `primary`, `secondary`
-- `error`, `success`, `warning`
+- 파일·폴더: snake_case. 클래스: PascalCase + 접미사(`Controller`/`Screen`/`Repository`).
+- 예: `LedgerController` → `ledger_controller.dart`.
+- **위젯**: 기반 Material 3 컴포넌트명을 suffix로 (`Button`/`Chip`/`Card`/`Dialog`/`Sheet` …).
+  공용 위젯은 `App` 접두사(`AppFillButton`).
 
-```dart
-// ✅ GOOD: context.colors extension 사용
-final colors = context.colors;
-Container(color: colors.primary);
-Text('Hello', style: TextStyle(color: colors.textPrimary));
+## 모델
 
-// ✅ GOOD: 색상에 투명도 적용 (Flutter 3.27+)
-Container(
-  color: colors.primary.withValues(alpha: 0.8),  // 80% 투명도
-)
+- 모델은 `models/` 에 대표 클래스명(snake_case) 파일로. 저장소 파일 안에 정의하지 않습니다.
+- 화면 표시만을 위한 모델 클래스는 만들지 않습니다. 저장된 값은 모델 그대로, 화면 값은
+  훅으로. enum 은 허용. `Model` 접미사 · record typedef 로 상태를 묶는 우회 금지.
+- 금액은 원 단위 정수(`int`)로 다룹니다. 합계·비율 같은 계산은 화면이 아니라 순수 함수
+  (`shared/util/`)에 두고 테스트합니다. **이체는 자산 간 이동이므로 수입·지출 합계와
+  통계에 넣지 않습니다.**
+- `*State` 클래스는 **예외로만**: 모델 하나로 안 되고 훅으로도 안 될 때(화면보다 오래
+  살거나 여러 화면이 공유)만. `models/xxx_state.dart` 에 두고 필요한 이유를 한 줄
+  dartdoc 으로 적습니다.
+- 허가 목록은 `state_allowlist.txt`(한 줄에 이름 하나 + `# 이유`).
+  `test/architecture/state_allowlist_test.dart` 가 목록에 없는 `*State` · record typedef ·
+  StatefulWidget 의 State 를 막습니다. 새로 필요하면 같은 PR 에서 목록에 이유와 함께 추가.
 
-// ⚠️ DEPRECATED: withOpacity 사용 금지 (Flutter 3.27+)
-colors.primary.withOpacity(0.8);  // 이렇게 하지 마세요!
+## 금지
 
-// ❌ BAD: 하드코딩된 색상
-Container(color: Color(0xFF2196F3));
-```
+`setState` · `StatefulWidget` · 허가 목록에 없는 `*State` 클래스 · record 상태 묶음 ·
+`provider` 패키지 · 하드코딩(색/폰트/문자열) · 과도한 추상화(YAGNI) · 영어 doc comment ·
+이름만 되풀이하는 doc comment.
 
-**투명도 적용 가이드 (Material 3):**
-- Flutter 3.27+에서는 `withOpacity()` 대신 `withValues(alpha:)` 사용
-- Material 3는 tone-based surface 시스템 사용 (elevation 기반 opacity 대신)
-- 버튼/상호작용 상태에서는 여전히 opacity 사용
+## 패키지 추가
 
-```dart
-// 새 색상이 필요한 경우 AppColors에 추가
-static const light = AppColors(
-  // 기존 색상들...
-  divider: Color(0xFFE0E0E0),        // 새 색상 추가 예시
-  disabled: Color(0xFF9E9E9E),       // 비활성 상태 색상
-);
-```
-
-### 타이포그래피
-
-**현재 정의된 AppTypography:**
-- `heading` - 32px, 일반 (큰 제목)
-- `title` - 20px, 볼드 (중간 제목)
-- `body` - 16px, 일반 (본문)
-- `caption` - 14px, 일반 (작은 텍스트)
-
-```dart
-// ✅ GOOD: AppTypography 사용
-Text('제목', style: AppTypography.heading);
-Text('타이틀', style: AppTypography.title);
-Text('본문', style: AppTypography.body);
-Text('설명', style: AppTypography.caption);
-
-// ✅ GOOD: 색상과 함께 사용
-Text('제목', style: AppTypography.heading.copyWith(
-  color: context.colors.textPrimary,
-));
-
-// ⚠️ ACCEPTABLE: 새로운 스타일 필요 시 AppTypography에 추가
-// lib/core/themes/app_typography.dart에 추가:
-static const subtitle = TextStyle(
-  fontSize: 18,
-  fontWeight: FontWeight.w500,
-  fontFamily: 'Noto Sans KR',
-);
-
-// ❌ BAD: 직접 크기 지정
-Text('제목', style: TextStyle(fontSize: 32));
-```
-
-### 간격
-
-```dart
-// ⚠️ 프로젝트에 AppSpacing이 정의되어 있지 않음
-// 필요시 lib/core/themes/app_spacing.dart 생성 권장:
-class AppSpacing {
-  static const double xs = 4;
-  static const double sm = 8;
-  static const double md = 16;
-  static const double lg = 24;
-  static const double xl = 32;
-}
-
-// 현재는 직접 값 사용
-SizedBox(height: 16);
-Padding(padding: EdgeInsets.all(24));
-```
-
-## 다국어화 (easy_localization)
-
-### 번역 키 규칙
-
-- 파일 위치: `assets/translations/ko.json`, `assets/translations/en.json`
-- 키 네이밍: `feature.component.text` (예: `todo.add_button`, `common.cancel`)
-
-```dart
-// ✅ GOOD: 번역 키 사용
-Text('todo.add_button'.tr());
-Text('common.welcome'.tr(args: [userName]));
-
-// ❌ BAD: 하드코딩된 문자열
-Text('추가하기');
-```
-
-## 코드 스타일
-
-### 문서화
-
-```dart
-/// Todo 항목을 관리하는 컨트롤러
-///
-/// 추가, 삭제, 완료 상태 변경 기능을 제공합니다.
-class TodoController extends Notifier<List<Todo>> {
-  /// 새로운 할 일을 추가합니다.
-  ///
-  /// [title]이 비어있으면 추가하지 않습니다.
-  void add(String title) {
-    if (title.isEmpty) return;
-    state = [...state, Todo(title)];
-  }
-}
-```
-
-### const 사용
-
-```dart
-// ✅ GOOD: const 생성자 최대한 활용
-const SizedBox(height: 16);
-const Padding(padding: EdgeInsets.all(8));
-
-// ⚠️ OK: const로 만들 수 없는 경우
-SizedBox(height: dynamicValue);
-```
-
-### 린트 규칙
-
-프로젝트는 `pedantic_mono` 기반이며, 다음 규칙을 완화했습니다:
-
-```yaml
-# analysis_options.yaml
-linter:
-  rules:
-    require_trailing_commas: false  # trailing comma 선택사항
-    cascade_invocations: false      # cascade 강제 안 함
-```
-
-## 파일 생성 가이드
-
-### 새 기능(Feature) 추가 시
-
-1. `lib/features/[feature_name]/` 디렉토리 생성
-2. 다음 하위 구조 생성:
-   - `screens/` - UI 화면
-   - `controllers/` - Riverpod 상태 관리
-   - `models/` - 데이터 모델
-   - `widgets/` - 해당 기능 전용 위젯 (선택)
-
-### 새 화면(Screen) 추가 시
-
-```dart
-/// [FeatureName] 메인 화면
-class FeatureNameScreen extends ConsumerWidget {
-  /// [FeatureNameScreen] 생성자
-  const FeatureNameScreen({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final colors = context.colors;
-
-    return Scaffold(
-      appBar: AppBar(title: Text('feature.title'.tr())),
-      body: const Center(child: Text('Content')),
-    );
-  }
-}
-```
-
-### 새 모델(Model) 추가 시
-
-**간단한 모델:**
-```dart
-/// [ModelName] 데이터 모델
-class ModelName {
-  /// [ModelName] 생성자
-  const ModelName({
-    required this.id,
-    required this.name,
-  });
-
-  /// 고유 식별자
-  final String id;
-
-  /// 이름
-  final String name;
-}
-```
-
-## 금지 사항
-
-❌ **하지 말아야 할 것들:**
-
-1. `setState` 사용 (Riverpod 사용)
-2. `Provider` 패키지 사용 (Riverpod만 사용)
-3. 하드코딩된 색상/폰트/문자열
-4. 글로벌 변수 남용
-5. 과도한 추상화 (YAGNI 원칙)
-6. 영어 doc comment (한국어 사용)
-
-## 개발 워크플로우
-
-### 패키지 추가
-**⚠️ 중요: 패키지는 반드시 명령어로 추가**
+`pubspec.yaml` 직접 수정 금지. 반드시 명령어로:
 
 ```bash
-# ✅ GOOD: 명령어로 패키지 추가
 fvm flutter pub add package_name
-fvm flutter pub add package_name --dev  # dev dependency
-
-# ❌ BAD: pubspec.yaml 직접 수정 금지
+fvm flutter pub add package_name --dev
 ```
 
-**이유:**
-- `fvm flutter pub add`는 자동으로 최신 호환 버전을 찾아 추가
-- pubspec.yaml 포맷팅 유지
-- 의존성 충돌 자동 해결
-- 즉시 패키지 다운로드
+## 테스트 작성 기준
 
-### 의존성 설치
-```bash
-fvm flutter pub get
-```
+테스트는 개수를 늘리거나 단순 구현 내용을 고정하기 위해 만들지 않습니다. 테스트를 추가하기
+전에 **어떤 실제 회귀를 막는지** 한 문장으로 설명할 수 있어야 하며, 설명할 수 없다면 추가하지
+않습니다.
 
-### 앱 실행
-```bash
-fvm flutter run
-```
+- 금액 계산·집계 같은 비즈니스 규칙, 저장 실패·롤백, 데이터 정합성처럼 실제로 깨질 수 있는
+  동작과 경계를 우선 검증합니다.
+- 버그 수정에는 가능하면 그 버그가 재발하면 실패하는 가장 작은 회귀 테스트 하나를 둡니다.
+  같은 동작을 단위·위젯 테스트에서 의미 없이 중복 검증하지 않습니다.
+- 번역 문구, 정적 파일 존재 여부, 상수값, 단순 생성자·getter, 컴파일러나 정적 분석기가
+  이미 잡는 내용만 확인하는 전용 테스트는 작성하지 않습니다.
+- 커버리지 수치나 테스트 개수 자체를 목표로 삼지 않습니다.
 
-### 코드 생성 (freezed, json_serializable 등)
-```bash
-fvm flutter pub run build_runner build --delete-conflicting-outputs
-```
+## 커밋 전 검증
 
-### 분석
 ```bash
 fvm flutter analyze
+fvm flutter test
+git ls-files '*.dart' | xargs fvm dart format --output=none --set-exit-if-changed
 ```
 
-## 네이밍 컨벤션
+- `dart format` 은 `flutter pub get` 뒤에, 바꾼 파일만 돌립니다. 의존성을 받기 전에 돌리면
+  손대지 않은 파일까지 다른 스타일로 바뀝니다.
+- `dart fix --apply` 같은 일괄 수정 뒤에는 `git status` 로 의도하지 않은 파일(`pubspec.yaml`
+  등)을 확인하고 되돌립니다.
 
-### 파일명 (snake_case)
+## 커밋·PR 규약
 
-```
-✅ GOOD:
-- user_controller.dart
-- auth_repository.dart
-- sample_screen.dart
-- custom_button.dart
-- app_colors.dart
-
-❌ BAD:
-- UserController.dart (PascalCase)
-- authRepository.dart (camelCase)
-- sample-screen.dart (kebab-case)
-```
-
-### 폴더명 (snake_case)
-
-```
-✅ GOOD:
-lib/
-├── features/
-│   ├── user_profile/
-│   ├── todo/
-│   └── settings/
-
-❌ BAD:
-├── userProfile/ (camelCase)
-├── user-profile/ (kebab-case)
-```
-
-### 클래스명 (PascalCase + 접미사)
-
-**Controller (상태 관리)**
-```dart
-✅ GOOD:
-- TodoController (동기)
-- UserController (비동기)
-- ThemeController
-- AuthController
-
-❌ BAD:
-- TodoNotifier
-- TodoProvider
-- TodoState
-```
-
-**파일명 매핑:**
-- `TodoController` → `todo_controller.dart`
-- `UserProfileController` → `user_profile_controller.dart`
-
-**Screen (화면)**
-```dart
-✅ GOOD:
-- SampleScreen
-- HomeScreen
-- UserProfileScreen
-
-파일명: sample_screen.dart
-```
-
-**Model (데이터)**
-```dart
-✅ GOOD:
-- User
-- Todo
-- Product
-
-파일명: user.dart, todo.dart
-```
-
-**Widget (재사용 컴포넌트)**
-```dart
-✅ GOOD:
-- CustomButton
-- LoadingIndicator
-- UserAvatar
-
-파일명: custom_button.dart
-```
-
-**Repository (데이터 계층)**
-```dart
-✅ GOOD:
-- UserRepository
-- TodoRepository
-- AuthRepository
-
-파일명: user_repository.dart
-```
-
-### Provider 변수명 (camelCase)
-
-```dart
-✅ GOOD:
-final todoProvider = NotifierProvider<TodoController, List<Todo>>(...);
-final userProvider = AsyncNotifierProvider<UserController, User?>(...);
-final themeControllerProvider = NotifierProvider<ThemeController, ThemeMode>(...);
-
-❌ BAD:
-final TodoProvider = ...  (PascalCase)
-final todo_provider = ...  (snake_case)
-```
-
-## 요약
-
-- **상태 관리**: Riverpod 3.0
-  - 동기: NotifierProvider
-  - 비동기: AsyncNotifierProvider
-  - Mutations, 자동 재시도
-- **디자인 시스템**:
-  - AppColors (ThemeExtension) - `context.colors` 사용
-  - AppTypography (heading/title/body/caption)
-  - 투명도: `withValues(alpha:)` 사용 (Flutter 3.27+)
-- **다국어**: easy_localization (`.tr()`)
-- **구조**: core/ (전역) + features/ (기능별)
-- **네이밍**:
-  - 파일/폴더: snake_case
-  - 클래스: PascalCase + 접미사 (Controller, Screen, Repository)
-  - Provider 변수: camelCase + Provider 접미사
-- **스타일**: 심플, const 최대 활용, 문서화
-- **모델**: 간단한 경우 plain class, 복잡한 경우 freezed 사용
+- 커밋·PR 제목은 **한국어 문장**. 영어 `feat:`/`fix:` 프리픽스 사용 금지.
+- PR은 Ready 상태(draft 아님)로, linear 히스토리를 유지해 Rebase-and-merge 가능하게.
+- 변경을 서술하는 주석(`// X 제거`, `// 이전엔…`)을 소스에 남기지 않습니다.

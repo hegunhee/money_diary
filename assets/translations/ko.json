@@ -1,7 +1,10 @@
 {
-  "app_title": "블루베리 TODO",
-  "new_todo": "새 할 일",
-  "add": "추가",
-  "cancel": "취소",
-  "hint_enter_todo": "할 일을 입력하세요"
+  "common": {
+    "app_name": "포켓가계부",
+    "retry": "다시 시도"
+  },
+  "home": {
+    "empty_title": "아직 기록이 없어요",
+    "empty_description": "첫 지출을 기록하면 여기에 모여요."
+  }
 }

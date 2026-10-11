@@ -1,7 +1,10 @@
 {
-  "app_title": "Blueberry TODO",
-  "new_todo": "New Todo",
-  "add": "Add",
-  "cancel": "Cancel",
-  "hint_enter_todo": "Enter a todo"
+  "common": {
+    "app_name": "Pocket Ledger",
+    "retry": "Try again"
+  },
+  "home": {
+    "empty_title": "No records yet",
+    "empty_description": "Your spending will show up here once you add it."
+  }
 }

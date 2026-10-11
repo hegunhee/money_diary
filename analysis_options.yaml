@@ -13,8 +13,10 @@ analyzer:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
     - "lib/shared/image_generated/**"
-  plugins:
-    - custom_lint
+    - "build/**"
+    - ".dart_tool/**"
+    - android/**
+    - ios/**
   language:
     strict-casts: false
     strict-raw-types: false
@@ -22,7 +24,7 @@ analyzer:
 linter:
   rules:
     # 문서화 관련
-    public_member_api_docs: true # 퍼블릭 멤버에 문서 주석 필수
+    public_member_api_docs: false # 이름만 되풀이하는 문서 주석을 강제하지 않음
 
     # import/dependency 관련
     sort_pub_dependencies: false # pubspec.yaml 의존성 정렬 강제 안함
