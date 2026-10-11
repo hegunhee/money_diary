@@ -6,6 +6,7 @@ import 'package:money_diary/core/themes/app_typography.dart';
 import 'package:money_diary/features/history/screens/history_screen.dart';
 import 'package:money_diary/features/home/screens/home_screen.dart';
 import 'package:money_diary/features/report/screens/report_screen.dart';
+import 'package:money_diary/features/settings/screens/settings_screen.dart';
 import 'package:money_diary/shared/controllers/main_tab_controller.dart';
 import 'package:money_diary/shared/widgets/app_bottom_navigation.dart';
 import 'package:money_diary/shared/widgets/app_top_bar.dart';
@@ -26,6 +27,7 @@ class MainScreen extends ConsumerWidget {
               MainTab.home => const HomeScreen(),
               MainTab.history => const HistoryScreen(),
               MainTab.report => const ReportScreen(),
+              MainTab.settings => const SettingsScreen(),
               _ => _ComingSoonScreen(tab),
             },
         ],
