@@ -36,6 +36,33 @@ class LedgerController extends AsyncNotifier<LedgerBook> {
     );
   }
 
+  /// 거래를 고칩니다. 예전 값으로 반영했던 잔액을 되돌린 뒤 새 값으로 다시 반영합니다.
+  Future<void> updateEntry(LedgerEntry entry) async {
+    final book = await future;
+    final old = book.entries.firstWhere((other) => other.id == entry.id);
+    final assets = applyEntry(revertEntry(book.assets, old), entry);
+    await ref.read(ledgerRepositoryProvider).saveEntry(entry, assets);
+    state = AsyncData(
+      book.copyWith(
+        entries: _upsert(book.entries, entry, (e) => e.id),
+        assets: assets,
+      ),
+    );
+  }
+
+  /// 거래를 지우고 잔액을 되돌립니다.
+  Future<void> deleteEntry(LedgerEntry entry) async {
+    final book = await future;
+    final assets = revertEntry(book.assets, entry);
+    await ref.read(ledgerRepositoryProvider).deleteEntry(entry.id, assets);
+    state = AsyncData(
+      book.copyWith(
+        entries: [...book.entries.where((e) => e.id != entry.id)],
+        assets: assets,
+      ),
+    );
+  }
+
   /// 자산을 더하거나 고칩니다.
   Future<void> saveAsset(AssetAccount asset) async {
     final book = await future;

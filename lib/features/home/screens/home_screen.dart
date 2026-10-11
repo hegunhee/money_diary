@@ -72,7 +72,7 @@ class HomeScreen extends ConsumerWidget {
                 const SizedBox(height: AppSpacing.lg),
                 QuickActionRow(
                   onAdd: (type) =>
-                      Navigator.of(context).push(EntryScreen.route(type)),
+                      Navigator.of(context).push(EntryScreen.route(type: type)),
                 ),
                 for (final project in projects) ...[
                   const SizedBox(height: AppSpacing.lg),
@@ -90,6 +90,9 @@ class HomeScreen extends ConsumerWidget {
                   days: groupByDay(entries).take(_recentDays).toList(),
                   book: book,
                   today: today,
+                  onEntryTap: (entry) => Navigator.of(
+                    context,
+                  ).push(EntryScreen.route(entry: entry)),
                   onSeeAll: () => ref
                       .read(mainTabProvider.notifier)
                       .select(MainTab.history),

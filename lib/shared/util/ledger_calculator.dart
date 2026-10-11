@@ -146,7 +146,18 @@ double budgetUsage(int expense, int budget) =>
 ///
 /// 지출은 결제 자산에서 빠지고(카드·간편결제는 결제 예정 금액이 늘고), 수입은 더해지며,
 /// 이체는 보내는 자산에서 빠져 받는 자산에 더해집니다.
-List<AssetAccount> applyEntry(List<AssetAccount> assets, LedgerEntry entry) {
+List<AssetAccount> applyEntry(List<AssetAccount> assets, LedgerEntry entry) =>
+    _shiftBalances(assets, entry, 1);
+
+/// [applyEntry]로 반영했던 거래를 자산에서 되돌립니다. 거래를 고치거나 지울 때 씁니다.
+List<AssetAccount> revertEntry(List<AssetAccount> assets, LedgerEntry entry) =>
+    _shiftBalances(assets, entry, -1);
+
+List<AssetAccount> _shiftBalances(
+  List<AssetAccount> assets,
+  LedgerEntry entry,
+  int direction,
+) {
   int delta(AssetAccount asset) {
     final outflow = asset.kind.countsTowardNetWorth
         ? -entry.amount
@@ -164,6 +175,7 @@ List<AssetAccount> applyEntry(List<AssetAccount> assets, LedgerEntry entry) {
   }
 
   return [
-    for (final asset in assets) asset.withBalance(asset.balance + delta(asset)),
+    for (final asset in assets)
+      asset.withBalance(asset.balance + delta(asset) * direction),
   ];
 }

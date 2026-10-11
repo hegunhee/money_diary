@@ -103,6 +103,18 @@ void main() {
       expect(balances(_entry(EntryType.expense, 200, to: 'card'))['card'], 500);
     });
 
+    test('반영한 거래를 되돌리면 잔액이 처음으로 돌아온다', () {
+      for (final entry in [
+        _entry(EntryType.expense, 200),
+        _entry(EntryType.expense, 200, to: 'card'),
+        _entry(EntryType.income, 200),
+        _entry(EntryType.transfer, 200, to: 'card'),
+      ]) {
+        final restored = revertEntry(applyEntry(assets, entry), entry);
+        expect([for (final a in restored) a.balance], [1000, 500, 300]);
+      }
+    });
+
     test('이체는 순자산을 바꾸지 않고 카드로 보내면 결제 예정 금액이 줄어든다', () {
       final moved = applyEntry(assets, _entry(EntryType.transfer, 200));
       expect(netWorth(moved), netWorth(assets));

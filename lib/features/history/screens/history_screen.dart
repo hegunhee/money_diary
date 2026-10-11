@@ -146,7 +146,13 @@ class HistoryScreen extends HookConsumerWidget {
                       AppSpacing.gutter,
                       AppSpacing.xl,
                     ),
-                    child: DailyLedgerSection(day: day, book: book),
+                    child: DailyLedgerSection(
+                      day: day,
+                      book: book,
+                      onEntryTap: (entry) => Navigator.of(
+                        context,
+                      ).push(EntryScreen.route(entry: entry)),
+                    ),
                   ),
                 if (streak >= 2)
                   Padding(

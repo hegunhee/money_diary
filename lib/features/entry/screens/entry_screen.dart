@@ -14,39 +14,55 @@ import 'package:money_diary/shared/controllers/ledger_controller.dart';
 import 'package:money_diary/shared/controllers/today_controller.dart';
 import 'package:money_diary/shared/models/ledger_entry.dart';
 import 'package:money_diary/shared/util/ledger_labels.dart';
+import 'package:money_diary/shared/util/won_format.dart';
 import 'package:money_diary/shared/util/won_input.dart';
 import 'package:money_diary/shared/widgets/app_content_width.dart';
 import 'package:money_diary/shared/widgets/app_fill_button.dart';
 import 'package:money_diary/shared/widgets/app_filter_chip.dart';
+import 'package:money_diary/shared/widgets/app_sheet.dart';
 import 'package:money_diary/shared/widgets/inline_error_text.dart';
 
-/// 거래 입력 — 지출·수입·이체 한 건을 적어 저장합니다.
+/// 거래 입력 — 지출·수입·이체 한 건을 적어 저장합니다. [entry]를 주면 그 거래를 고칩니다.
 class EntryScreen extends HookConsumerWidget {
-  const EntryScreen({this.initialType = EntryType.expense, super.key});
+  const EntryScreen({
+    this.initialType = EntryType.expense,
+    this.entry,
+    super.key,
+  });
 
   /// 처음 골라져 있는 거래 종류
   final EntryType initialType;
 
+  /// 고칠 거래. null이면 새 거래를 만듭니다.
+  final LedgerEntry? entry;
+
   /// 아래에서 올라오는 전체 화면으로 여는 route
-  static Route<void> route([EntryType type = EntryType.expense]) =>
-      MaterialPageRoute(
-        fullscreenDialog: true,
-        builder: (_) => EntryScreen(initialType: type),
-      );
+  static Route<void> route({
+    EntryType type = EntryType.expense,
+    LedgerEntry? entry,
+  }) => MaterialPageRoute(
+    fullscreenDialog: true,
+    builder: (_) => EntryScreen(initialType: type, entry: entry),
+  );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
-    final type = useState(initialType);
-    final amount = useTextEditingController();
-    final title = useTextEditingController();
-    final memo = useTextEditingController();
-    final occurredAt = useState(ref.read(todayProvider));
-    final assetId = useState<String?>(null);
-    final toAssetId = useState<String?>(null);
-    final category = useState(LedgerCategory.food);
-    final projectId = useState<String?>(null);
-    final recurring = useState(false);
+    final editing = entry;
+    final type = useState(editing?.type ?? initialType);
+    final amount = useTextEditingController(
+      text: editing == null ? null : formatWon(editing.amount),
+    );
+    final title = useTextEditingController(text: editing?.title);
+    final memo = useTextEditingController(text: editing?.memo);
+    final occurredAt = useState<DateTime>(
+      editing?.occurredAt ?? ref.read(todayProvider),
+    );
+    final assetId = useState(editing?.assetId);
+    final toAssetId = useState(editing?.toAssetId);
+    final category = useState(editing?.category ?? LedgerCategory.food);
+    final projectId = useState(editing?.projectId);
+    final recurring = useState(editing?.isRecurring ?? false);
     final errors = useState(const <EntryFormError>{});
     final saving = useState(false);
     final saveFailed = useState(false);
@@ -117,8 +133,8 @@ class EntryScreen extends HookConsumerWidget {
         return;
       }
       final name = title.text.trim();
-      final entry = LedgerEntry(
-        id: '${DateTime.now().microsecondsSinceEpoch}',
+      final draft = LedgerEntry(
+        id: editing?.id ?? '${DateTime.now().microsecondsSinceEpoch}',
         type: type.value,
         amount: parseWon(amount.text),
         title: name.isNotEmpty
@@ -130,6 +146,10 @@ class EntryScreen extends HookConsumerWidget {
         assetId: asset!.id,
         toAssetId: isTransfer ? toAsset!.id : null,
         category: isTransfer ? null : selectedCategory,
+        // 세부 분류는 이 화면에서 고치지 않으므로 카테고리가 그대로일 때만 남깁니다.
+        detail: !isTransfer && selectedCategory == editing?.category
+            ? editing?.detail
+            : null,
         projectId: isTransfer ? null : projectId.value,
         memo: memo.text.trim().isEmpty ? null : memo.text.trim(),
         isRecurring: recurring.value,
@@ -137,7 +157,10 @@ class EntryScreen extends HookConsumerWidget {
       saving.value = true;
       saveFailed.value = false;
       try {
-        await ref.read(ledgerProvider.notifier).addEntry(entry);
+        final controller = ref.read(ledgerProvider.notifier);
+        await (editing == null
+            ? controller.addEntry(draft)
+            : controller.updateEntry(draft));
         if (!context.mounted) {
           return;
         }
@@ -155,6 +178,31 @@ class EntryScreen extends HookConsumerWidget {
       } finally {
         if (context.mounted) {
           saving.value = false;
+        }
+      }
+    }
+
+    Future<void> delete() async {
+      final confirmed = await confirmDelete(
+        context,
+        message: 'entry.delete_confirm'.tr(),
+        confirmLabel: 'common.delete'.tr(),
+        cancelLabel: 'common.cancel'.tr(),
+      );
+      if (!confirmed || saving.value) {
+        return;
+      }
+      saving.value = true;
+      saveFailed.value = false;
+      try {
+        await ref.read(ledgerProvider.notifier).deleteEntry(editing!);
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
+      } on Object {
+        if (context.mounted) {
+          saving.value = false;
+          saveFailed.value = true;
         }
       }
     }
@@ -181,7 +229,7 @@ class EntryScreen extends HookConsumerWidget {
         ),
         centerTitle: true,
         title: Text(
-          'entry.title'.tr(),
+          editing == null ? 'entry.title'.tr() : 'entry.title_edit'.tr(),
           style: AppTypography.headlineSm.copyWith(color: colors.textPrimary),
         ),
       ),
@@ -448,11 +496,15 @@ class EntryScreen extends HookConsumerWidget {
                 children: [
                   Expanded(
                     child: AppFillButton(
-                      label: 'entry.save_and_continue'.tr(),
+                      label: editing == null
+                          ? 'entry.save_and_continue'.tr()
+                          : 'common.delete'.tr(),
                       variant: AppFillVariant.tonal,
                       onPressed: saving.value
                           ? null
-                          : () => save(keepAdding: true),
+                          : editing == null
+                          ? () => save(keepAdding: true)
+                          : delete,
                     ),
                   ),
                   const SizedBox(width: AppSpacing.sm),
