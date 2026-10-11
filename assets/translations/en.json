@@ -240,6 +240,11 @@
     "delete": "Delete this project",
     "delete_confirm": "Delete '{}'? Its records stay, only the tag is removed.",
     "empty": "No projects yet. Create one for a trip or a move to track its budget.",
-    "save_failed": "Couldn't save. Please try again."
+    "save_failed": "Couldn't save. Please try again.",
+    "archived": "Archived",
+    "archive": "Archive",
+    "unarchive": "Unarchive",
+    "archive_hint": "Archive a project once you're done spending on it. Its records stay viewable; it just stops appearing as a tag when adding records.",
+    "archived_hint": "This project is archived and doesn't appear as a tag when adding records."
   }
 }

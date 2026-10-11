@@ -97,11 +97,17 @@ class ProjectCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 6),
                           AppBadge(
-                            ended
+                            project.isArchived
+                                ? 'project.archived'.tr()
+                                : ended
                                 ? 'project.ended'.tr()
                                 : 'project.active'.tr(),
-                            background: ended ? colors.surfaceHigh : null,
-                            foreground: ended ? colors.textSecondary : null,
+                            background: ended || project.isArchived
+                                ? colors.surfaceHigh
+                                : null,
+                            foreground: ended || project.isArchived
+                                ? colors.textSecondary
+                                : null,
                           ),
                         ],
                       ),
@@ -151,7 +157,7 @@ class ProjectCard extends StatelessWidget {
                     remaining < 0 ? colors.expense : colors.textPrimary,
                   ),
                 ),
-                if (remaining > 0 && days > 0 && !ended)
+                if (remaining > 0 && days > 0 && !ended && !project.isArchived)
                   Text(
                     'project.daily'.tr(
                       args: [wonSymbolLabel(remaining ~/ days)],
