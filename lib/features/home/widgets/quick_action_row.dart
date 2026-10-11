@@ -11,8 +11,8 @@ import 'package:money_diary/shared/widgets/app_press_scale.dart';
 class QuickActionRow extends StatelessWidget {
   const QuickActionRow({required this.onAdd, super.key});
 
-  /// 고른 종류로 거래 입력을 엽니다. null이면 누를 수 없습니다.
-  final ValueChanged<EntryType>? onAdd;
+  /// 고른 종류로 거래 입력을 엽니다.
+  final ValueChanged<EntryType> onAdd;
 
   @override
   Widget build(BuildContext context) {
@@ -27,14 +27,13 @@ class QuickActionRow extends StatelessWidget {
         colors.transfer,
       ),
     ];
-    final onAdd = this.onAdd;
     return Row(
       children: [
         for (final (index, (type, icon, tint, color)) in actions.indexed) ...[
           if (index > 0) const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: AppPressScale(
-              onTap: onAdd == null ? null : () => onAdd(type),
+              onTap: () => onAdd(type),
               child: AppCard(
                 padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
                 child: Column(

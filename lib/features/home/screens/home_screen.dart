@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money_diary/core/themes/app_spacing.dart';
+import 'package:money_diary/features/entry/screens/entry_screen.dart';
 import 'package:money_diary/features/home/widgets/monthly_status_card.dart';
 import 'package:money_diary/features/home/widgets/net_worth_card.dart';
 import 'package:money_diary/features/home/widgets/project_card.dart';
@@ -69,7 +70,10 @@ class HomeScreen extends ConsumerWidget {
                   dayOfMonth: isThisMonth ? today.day : null,
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                const QuickActionRow(onAdd: null),
+                QuickActionRow(
+                  onAdd: (type) =>
+                      Navigator.of(context).push(EntryScreen.route(type)),
+                ),
                 for (final project in projects) ...[
                   const SizedBox(height: AppSpacing.lg),
                   ProjectCard(

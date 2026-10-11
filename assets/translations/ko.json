@@ -111,6 +111,64 @@
     "transfer_count": "(이체 {}건)",
     "empty": "이 조건에 맞는 내역이 없어요.",
     "streak_title": "{}일 연속 기록 달성!",
-    "streak_description": "꾸준히 기록할수록 소비 흐름이 또렷해져요."
+    "streak_description": "꾸준히 기록할수록 소비 흐름이 또렷해져요.",
+    "write": "내역 쓰기"
+  },
+  "entry": {
+    "title": "내역 추가",
+    "cancel": "취소",
+    "save": "저장하기",
+    "save_and_continue": "저장 후 계속 추가",
+    "type": {
+      "expense": "지출",
+      "income": "수입",
+      "transfer": "이체"
+    },
+    "amount_label": {
+      "expense": "지출 금액",
+      "income": "수입 금액",
+      "transfer": "이체 금액"
+    },
+    "amount_step": {
+      "1000": "+1천",
+      "5000": "+5천",
+      "10000": "+1만",
+      "50000": "+5만"
+    },
+    "amount_reset": "초기화",
+    "amount_delete": "한 자리 지우기",
+    "date": "일시",
+    "asset_label": {
+      "expense": "결제 자산",
+      "income": "입금 자산",
+      "transfer": "보내는 자산"
+    },
+    "to_asset": "받는 자산",
+    "asset_change": "자산 변경",
+    "asset_placeholder": "자산을 골라 주세요",
+    "asset_balance": "잔액 {}",
+    "asset_due": "결제 예정 {}",
+    "transfer_notice": "이체는 자산 간 이동이라 수입·지출 통계에서 빠집니다.",
+    "category_label": {
+      "expense": "지출 카테고리",
+      "income": "수입 카테고리",
+      "transfer": "카테고리"
+    },
+    "project": "프로젝트 태그",
+    "optional": "선택 사항",
+    "project_hint": "프로젝트에 비용을 묶어서 여행, 이사, 결혼식 예산을 따로 관리할 수 있습니다.",
+    "memo": "내용 및 메모",
+    "title_hint": "내용 (예: 스타벅스 강남점)",
+    "memo_hint": "메모",
+    "recurring": "반복 설정",
+    "recurring_on": "매달 반복되는 거래로 표시합니다.",
+    "recurring_off": "한 번만 기록합니다.",
+    "error": {
+      "amount": "금액을 입력해 주세요.",
+      "asset": "자산을 골라 주세요.",
+      "to_asset": "받는 자산을 골라 주세요.",
+      "same_asset": "보내는 자산과 받는 자산이 같아요.",
+      "save": "저장하지 못했어요. 다시 시도해 주세요."
+    }
   }
 }

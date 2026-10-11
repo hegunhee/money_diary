@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money_diary/core/themes/app_colors.dart';
 import 'package:money_diary/core/themes/app_spacing.dart';
 import 'package:money_diary/core/themes/app_typography.dart';
+import 'package:money_diary/features/entry/screens/entry_screen.dart';
 import 'package:money_diary/features/history/models/ledger_filter.dart';
 import 'package:money_diary/features/history/widgets/daily_ledger_section.dart';
 import 'package:money_diary/features/history/widgets/history_summary_card.dart';
@@ -33,6 +34,14 @@ class HistoryScreen extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppTopBar(section: 'nav.history'.tr()),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => Navigator.of(context).push(EntryScreen.route()),
+        backgroundColor: colors.primary,
+        foregroundColor: colors.onPrimary,
+        shape: const StadiumBorder(),
+        icon: const Icon(Icons.add),
+        label: Text('history.write'.tr(), style: AppTypography.headlineSm),
+      ),
       body: ledger.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => AppErrorView(
