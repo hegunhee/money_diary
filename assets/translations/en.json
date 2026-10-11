@@ -29,7 +29,10 @@
       "5": "Friday",
       "6": "Saturday",
       "7": "Sunday"
-    }
+    },
+    "save": "Save",
+    "delete": "Delete",
+    "cancel": "Cancel"
   },
   "nav": {
     "home": "Home",
@@ -169,7 +172,8 @@
       "to_asset": "Choose the receiving account.",
       "same_asset": "The two accounts are the same.",
       "save": "Couldn't save. Please try again."
-    }
+    },
+    "asset_empty": "Add an account in Settings first."
   },
   "report": {
     "net_saving": "Net savings this month",
@@ -199,5 +203,24 @@
     "comment_title": "This month's note",
     "comment_top_category": "{category} is your biggest expense at {amount}, {percent} of the total.",
     "see_history": "View expenses"
+  },
+  "settings": {
+    "budget": "Monthly spending budget",
+    "budget_unset": "Not set",
+    "budget_hint": "Leave it empty and save to turn the budget off.",
+    "assets": "Accounts",
+    "net_worth": "Net worth {}",
+    "assets_empty": "No accounts yet. Add an account or card first.",
+    "asset_add": "Add account",
+    "asset_edit": "Edit account",
+    "asset_name": "Name",
+    "asset_balance": "Balance",
+    "asset_due": "Amount due",
+    "asset_due_caption": "{} · due",
+    "asset_name_required": "Enter a name.",
+    "asset_delete": "Delete this account",
+    "asset_delete_confirm": "Delete '{}'? This can't be undone.",
+    "asset_in_use": "This account has records, so it can't be deleted.",
+    "save_failed": "Couldn't save. Please try again."
   }
 }

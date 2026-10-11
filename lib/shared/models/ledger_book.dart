@@ -20,6 +20,18 @@ class LedgerBook {
   /// 한 달 지출 예산(원). 정하지 않았으면 0입니다.
   final int monthlyBudget;
 
+  LedgerBook copyWith({
+    List<LedgerEntry>? entries,
+    List<AssetAccount>? assets,
+    List<Project>? projects,
+    int? monthlyBudget,
+  }) => LedgerBook(
+    entries: entries ?? this.entries,
+    assets: assets ?? this.assets,
+    projects: projects ?? this.projects,
+    monthlyBudget: monthlyBudget ?? this.monthlyBudget,
+  );
+
   AssetAccount? assetById(String? id) {
     for (final asset in assets) {
       if (asset.id == id) {

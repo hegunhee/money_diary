@@ -29,7 +29,10 @@
       "5": "금요일",
       "6": "토요일",
       "7": "일요일"
-    }
+    },
+    "save": "저장",
+    "delete": "삭제",
+    "cancel": "취소"
   },
   "nav": {
     "home": "홈",
@@ -169,7 +172,8 @@
       "to_asset": "받는 자산을 골라 주세요.",
       "same_asset": "보내는 자산과 받는 자산이 같아요.",
       "save": "저장하지 못했어요. 다시 시도해 주세요."
-    }
+    },
+    "asset_empty": "설정 탭에서 자산을 먼저 더해 주세요."
   },
   "report": {
     "net_saving": "이번 달 순 저축액",
@@ -199,5 +203,24 @@
     "comment_title": "이달의 소비 코멘트",
     "comment_top_category": "{category} 지출이 {amount}으로 전체의 {percent}를 차지해 가장 커요.",
     "see_history": "지출 내역 보기"
+  },
+  "settings": {
+    "budget": "한 달 지출 예산",
+    "budget_unset": "정하지 않음",
+    "budget_hint": "비워 두고 저장하면 예산을 쓰지 않습니다.",
+    "assets": "자산",
+    "net_worth": "순자산 {}",
+    "assets_empty": "아직 자산이 없어요. 계좌나 카드를 먼저 더해 주세요.",
+    "asset_add": "자산 추가",
+    "asset_edit": "자산 수정",
+    "asset_name": "이름",
+    "asset_balance": "잔액",
+    "asset_due": "결제 예정 금액",
+    "asset_due_caption": "{} · 결제 예정",
+    "asset_name_required": "이름을 입력해 주세요.",
+    "asset_delete": "이 자산 삭제",
+    "asset_delete_confirm": "'{}' 자산을 지울까요? 되돌릴 수 없어요.",
+    "asset_in_use": "이 자산을 쓴 거래가 있어 지울 수 없어요.",
+    "save_failed": "저장하지 못했어요. 다시 시도해 주세요."
   }
 }

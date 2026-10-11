@@ -68,4 +68,29 @@ class LedgerRepository {
       for (final asset in assets) asset.id: asset.toJson(),
     });
   }
+
+  /// 자산 하나를 더하거나 고쳐 저장합니다.
+  Future<void> saveAsset(AssetAccount asset) async {
+    await (await _box(_assets)).put(asset.id, asset.toJson());
+  }
+
+  /// 자산 하나를 지웁니다.
+  Future<void> deleteAsset(String id) async {
+    await (await _box(_assets)).delete(id);
+  }
+
+  /// 프로젝트 하나를 더하거나 고쳐 저장합니다.
+  Future<void> saveProject(Project project) async {
+    await (await _box(_projects)).put(project.id, project.toJson());
+  }
+
+  /// 프로젝트 하나를 지웁니다.
+  Future<void> deleteProject(String id) async {
+    await (await _box(_projects)).delete(id);
+  }
+
+  /// 한 달 지출 예산을 저장합니다.
+  Future<void> saveMonthlyBudget(int budget) async {
+    await (await Hive.openBox<Object>(_settings)).put(_monthlyBudget, budget);
+  }
 }

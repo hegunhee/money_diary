@@ -28,7 +28,7 @@ lib/
 - 의존은 **`features → shared → core`** 한 방향(역방향 금지).
   - **core** : 의존성 없이 앱 전체에 적용되는 기능(테마·순수 유틸).
   - **shared** : 여러 feature에서 중복되는 컴포넌트·코드(공용 위젯 등).
-- feature: `main`(하단 탭 뼈대) · `home`(대시보드) · `history`(가계부 내역) · `entry`(거래 입력) · `report`(월간 분석). 하위 폴더는 필요해질 때 만듭니다.
+- feature: `main`(하단 탭 뼈대) · `home`(대시보드) · `history`(가계부 내역) · `entry`(거래 입력) · `report`(월간 분석) · `settings`(예산·자산 관리). 하위 폴더는 필요해질 때 만듭니다.
 
 ## 로컬 저장
 
@@ -37,8 +37,9 @@ lib/
 - `LedgerRepository` 만 Hive 를 압니다. 화면 테스트는 `test/helpers/pump_app.dart` 의
   `FakeLedgerRepository` 로 바꿔 끼웁니다.
 - 거래를 더하면 `applyEntry` 가 자산 잔액을 함께 고쳐 저장합니다.
-- 자산·프로젝트·예산 관리 화면이 아직 없어, **개발 빌드**는 처음 실행할 때 시안의 예시
-  가계부(`shared/util/sample_ledger.dart`)를 채웁니다. 릴리스 빌드는 빈 가계부로 시작합니다.
+- **개발 빌드**는 처음 실행할 때 시안의 예시 가계부(`shared/util/sample_ledger.dart`)를 채워
+  화면을 바로 확인할 수 있게 합니다. 릴리스 빌드는 빈 가계부로 시작하고, 자산과 예산은
+  설정 탭에서 더합니다.
 
 ## 데이터 흐름
 

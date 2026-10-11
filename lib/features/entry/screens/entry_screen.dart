@@ -14,6 +14,7 @@ import 'package:money_diary/shared/controllers/ledger_controller.dart';
 import 'package:money_diary/shared/controllers/today_controller.dart';
 import 'package:money_diary/shared/models/ledger_entry.dart';
 import 'package:money_diary/shared/util/ledger_labels.dart';
+import 'package:money_diary/shared/util/won_input.dart';
 import 'package:money_diary/shared/widgets/app_content_width.dart';
 import 'package:money_diary/shared/widgets/app_fill_button.dart';
 import 'package:money_diary/shared/widgets/app_filter_chip.dart';
@@ -254,6 +255,13 @@ class EntryScreen extends HookConsumerWidget {
                     selected: asset,
                     onChanged: (value) => assetId.value = value.id,
                   ),
+                  if (book.assets.isEmpty)
+                    Text(
+                      'entry.asset_empty'.tr(),
+                      style: AppTypography.bodySm.copyWith(
+                        color: colors.textSecondary,
+                      ),
+                    ),
                   if (errors.value.contains(EntryFormError.asset))
                     InlineErrorText('entry.error.asset'.tr()),
                   if (isTransfer) ...[
