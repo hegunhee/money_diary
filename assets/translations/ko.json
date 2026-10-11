@@ -170,5 +170,34 @@
       "same_asset": "보내는 자산과 받는 자산이 같아요.",
       "save": "저장하지 못했어요. 다시 시도해 주세요."
     }
+  },
+  "report": {
+    "net_saving": "이번 달 순 저축액",
+    "savings_rate": "저축률 {}",
+    "total_income": "총 수입",
+    "total_expense": "총 지출",
+    "income_count": "수입 {}건",
+    "budget_usage": "예산의 {}",
+    "transfer_excluded": "이체 제외",
+    "transfer_notice": "계좌 간 이체(자산이동) {}은 자산이 늘거나 줄지 않으므로 수입·지출 통계에서 자동 제외되었습니다.",
+    "vs_last_month_less": "전월 대비 {} 절약 중",
+    "vs_last_month_more": "전월 대비 {} 더 지출",
+    "tab": {
+      "category": "카테고리별",
+      "asset": "자산별",
+      "project": "프로젝트별"
+    },
+    "share_title": {
+      "category": "카테고리 지출 점유율",
+      "asset": "결제 수단별 점유",
+      "project": "프로젝트별 지출"
+    },
+    "daily_average": "1일 평균 {}",
+    "empty": "이 달에는 지출 기록이 없어요.",
+    "project_empty": "이 달에 프로젝트로 묶인 지출이 없어요.",
+    "project_caption": "지출의 {} · 예산의 {}",
+    "comment_title": "이달의 소비 코멘트",
+    "comment_top_category": "{category} 지출이 {amount}으로 전체의 {percent}를 차지해 가장 커요.",
+    "see_history": "지출 내역 보기"
   }
 }

@@ -134,6 +134,10 @@ int netWorth(Iterable<AssetAccount> assets) => assetTotal(
 int assetTotal(Iterable<AssetAccount> assets) =>
     assets.fold(0, (sum, asset) => sum + asset.balance);
 
+/// [month]의 날 수로 나눈 하루 평균 지출입니다.
+int dailyAverage(int expense, DateTime month) =>
+    expense ~/ DateTime(month.year, month.month + 1, 0).day;
+
 /// 예산에서 쓴 비율 (0 이상). 예산이 없으면 0입니다.
 double budgetUsage(int expense, int budget) =>
     budget <= 0 ? 0 : expense / budget;
