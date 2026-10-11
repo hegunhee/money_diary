@@ -27,6 +27,8 @@ class LedgerEntry {
     this.projectId,
     this.memo,
     this.isRecurring = false,
+    this.recurringDay,
+    this.recurrenceHandled = false,
   });
 
   factory LedgerEntry.fromJson(Map<String, dynamic> json) => LedgerEntry(
@@ -48,6 +50,8 @@ class LedgerEntry {
     projectId: json['projectId'] as String?,
     memo: json['memo'] as String?,
     isRecurring: json['isRecurring'] as bool? ?? false,
+    recurringDay: json['recurringDay'] as int?,
+    recurrenceHandled: json['recurrenceHandled'] as bool? ?? false,
   );
 
   final String id;
@@ -83,19 +87,44 @@ class LedgerEntry {
   /// 매달 반복되는 거래인지 여부
   final bool isRecurring;
 
+  /// 반복을 처음 건 날의 일(日). 31일에 건 반복이 2월을 지나도 다시 31일로 돌아오게 합니다.
+  final int? recurringDay;
+
+  /// 이 거래의 다음 달 거래를 이미 만들었는지 여부. 같은 달을 두 번 만들지 않게 합니다.
+  final bool recurrenceHandled;
+
   /// 프로젝트 태그를 뗀 거래
-  LedgerEntry withoutProject() => LedgerEntry(
-    id: id,
+  LedgerEntry withoutProject() => _copy(keepProject: false);
+
+  /// 다음 달 거래를 만들었다고 표시한 거래
+  LedgerEntry asRecurrenceHandled() => _copy(recurrenceHandled: true);
+
+  /// 반복으로 만들어지는 다음 거래. 내용은 같고 id와 일시만 다릅니다.
+  LedgerEntry asNextOccurrence({
+    required String id,
+    required DateTime occurredAt,
+  }) => _copy(id: id, occurredAt: occurredAt, recurrenceHandled: false);
+
+  LedgerEntry _copy({
+    String? id,
+    DateTime? occurredAt,
+    bool? recurrenceHandled,
+    bool keepProject = true,
+  }) => LedgerEntry(
+    id: id ?? this.id,
     type: type,
     amount: amount,
     title: title,
-    occurredAt: occurredAt,
+    occurredAt: occurredAt ?? this.occurredAt,
     assetId: assetId,
     toAssetId: toAssetId,
     category: category,
     detail: detail,
+    projectId: keepProject ? projectId : null,
     memo: memo,
     isRecurring: isRecurring,
+    recurringDay: recurringDay,
+    recurrenceHandled: recurrenceHandled ?? this.recurrenceHandled,
   );
 
   Map<String, dynamic> toJson() => {
@@ -112,5 +141,7 @@ class LedgerEntry {
     'projectId': projectId,
     'memo': memo,
     'isRecurring': isRecurring,
+    'recurringDay': recurringDay,
+    'recurrenceHandled': recurrenceHandled,
   };
 }

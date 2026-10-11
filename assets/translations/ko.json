@@ -160,9 +160,7 @@
     "memo": "내용 및 메모",
     "title_hint": "내용 (예: 스타벅스 강남점)",
     "memo_hint": "메모",
-    "recurring": "반복 설정",
-    "recurring_on": "매달 반복되는 거래로 표시합니다.",
-    "recurring_off": "한 번만 기록합니다.",
+    "recurring": "매달 반복",
     "error": {
       "amount": "금액을 입력해 주세요.",
       "asset": "자산을 골라 주세요.",
@@ -183,7 +181,9 @@
     "category_name_required": "이름을 입력해 주세요.",
     "category_duplicate": "이미 있는 카테고리예요.",
     "category_delete_confirm": "'{}' 카테고리를 지울까요? 이 카테고리로 적은 내역은 그대로 남습니다.",
-    "transfer_need_asset": "이체하려면 받는 자산이 하나 더 필요해요. 통장이나 카드를 먼저 더해 주세요."
+    "transfer_need_asset": "이체하려면 받는 자산이 하나 더 필요해요. 통장이나 카드를 먼저 더해 주세요.",
+    "recurring_next": "다음 등록일 {} · 매달 자동으로 등록돼요",
+    "recurring_handled": "다음 달 내역이 이미 등록됐어요"
   },
   "report": {
     "net_saving": "이번 달 순 저축액",

@@ -160,9 +160,7 @@
     "memo": "Details & memo",
     "title_hint": "Details (e.g. Starbucks Gangnam)",
     "memo_hint": "Memo",
-    "recurring": "Recurring",
-    "recurring_on": "Marked as a monthly recurring record.",
-    "recurring_off": "Recorded once.",
+    "recurring": "Repeat monthly",
     "error": {
       "amount": "Enter an amount.",
       "asset": "Choose an account.",
@@ -183,7 +181,9 @@
     "category_name_required": "Enter a name.",
     "category_duplicate": "That category already exists.",
     "category_delete_confirm": "Delete '{}'? Records in this category stay as they are.",
-    "transfer_need_asset": "A transfer needs a second account to receive the money. Add an account or card first."
+    "transfer_need_asset": "A transfer needs a second account to receive the money. Add an account or card first.",
+    "recurring_next": "Next on {} · added automatically every month",
+    "recurring_handled": "Next month's record has already been added"
   },
   "report": {
     "net_saving": "Net savings this month",
