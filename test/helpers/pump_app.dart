@@ -8,7 +8,8 @@ import 'package:money_diary/shared/models/ledger_book.dart';
 import 'package:money_diary/shared/models/ledger_entry.dart';
 import 'package:money_diary/shared/models/project.dart';
 import 'package:money_diary/shared/repositories/ledger_repository.dart';
-import 'package:money_diary/shared/util/sample_ledger.dart';
+
+import 'sample_ledger.dart';
 
 /// 시안이 오늘로 그린 날짜
 final designToday = DateTime(2026, 3, 18, 15, 30);

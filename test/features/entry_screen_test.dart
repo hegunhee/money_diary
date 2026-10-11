@@ -5,9 +5,9 @@ import 'package:money_diary/features/entry/models/entry_form_error.dart';
 import 'package:money_diary/features/entry/screens/entry_screen.dart';
 import 'package:money_diary/shared/controllers/ledger_controller.dart';
 import 'package:money_diary/shared/models/ledger_entry.dart';
-import 'package:money_diary/shared/util/sample_ledger.dart';
 
 import '../helpers/pump_app.dart';
+import '../helpers/sample_ledger.dart';
 
 void main() {
   test('이체는 받는 자산이 없거나 보내는 자산과 같으면 저장할 수 없다', () {

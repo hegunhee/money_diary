@@ -72,25 +72,26 @@ class ReportScreen extends HookConsumerWidget {
                 AppSpacing.xl,
               ),
               children: [
-                Row(
-                  children: [
-                    const MonthSelector(),
-                    const Spacer(),
-                    if (change != null)
-                      Flexible(
-                        flex: 3,
-                        child: AppBadge(
-                          (change <= 0
-                                  ? 'report.vs_last_month_less'
-                                  : 'report.vs_last_month_more')
-                              .tr(args: [percentLabel(change.abs())]),
-                          icon: change <= 0
-                              ? Icons.trending_down
-                              : Icons.trending_up,
-                        ),
-                      ),
-                  ],
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: MonthSelector(),
                 ),
+                if (change != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: AppBadge(
+                        (change <= 0
+                                ? 'report.vs_last_month_less'
+                                : 'report.vs_last_month_more')
+                            .tr(args: [percentLabel(change.abs())]),
+                        icon: change <= 0
+                            ? Icons.trending_down
+                            : Icons.trending_up,
+                      ),
+                    ),
+                  ),
                 ReportSummaryCard(
                   totals: totals,
                   incomeCount: entries

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money_diary/core/themes/app_theme.dart';
 import 'package:money_diary/features/main/screens/main_screen.dart';
+import 'package:money_diary/shared/controllers/ledger_controller.dart';
 import 'package:money_diary/shared/models/ledger_book.dart';
+import 'package:money_diary/shared/repositories/ledger_repository.dart';
+import 'package:money_diary/shared/util/ledger_calculator.dart';
 
 import 'helpers/pump_app.dart';
 
@@ -28,4 +32,27 @@ void main() {
     await tester.scrollUntilVisible(find.text('아직 기록이 없어요'), 300);
     expect(tester.takeException(), isNull);
   });
+
+  test('처음 실행하면 0원인 현금 자산 하나만 있는 빈 가계부로 시작한다', () async {
+    final repository = _FirstRunRepository();
+    final container = ProviderContainer(
+      overrides: [ledgerRepositoryProvider.overrideWithValue(repository)],
+    );
+    addTearDown(container.dispose);
+
+    final book = await container.read(ledgerProvider.future);
+
+    expect(book.entries, isEmpty);
+    expect(book.projects, isEmpty);
+    expect(book.monthlyBudget, 0);
+    expect(book.assets.single.balance, 0);
+    expect(netWorth(book.assets), 0);
+  });
+}
+
+class _FirstRunRepository extends FakeLedgerRepository {
+  _FirstRunRepository() : super(const LedgerBook());
+
+  @override
+  Future<bool> isInitialized() async => false;
 }

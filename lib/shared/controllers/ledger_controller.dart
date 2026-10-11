@@ -1,13 +1,11 @@
-import 'package:flutter/foundation.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:money_diary/shared/controllers/today_controller.dart';
 import 'package:money_diary/shared/models/asset_account.dart';
 import 'package:money_diary/shared/models/ledger_book.dart';
 import 'package:money_diary/shared/models/ledger_entry.dart';
 import 'package:money_diary/shared/models/project.dart';
 import 'package:money_diary/shared/repositories/ledger_repository.dart';
 import 'package:money_diary/shared/util/ledger_calculator.dart';
-import 'package:money_diary/shared/util/sample_ledger.dart';
 
 /// 가계부 Provider
 final ledgerProvider = AsyncNotifierProvider<LedgerController, LedgerBook>(
@@ -19,9 +17,20 @@ class LedgerController extends AsyncNotifier<LedgerBook> {
   @override
   Future<LedgerBook> build() async {
     final repository = ref.read(ledgerRepositoryProvider);
-    // 개발 빌드에서는 처음 실행할 때 시안의 예시 가계부를 채워 화면을 바로 확인합니다.
-    if (kDebugMode && !await repository.isInitialized()) {
-      await repository.replace(buildSampleLedger(ref.read(todayProvider)));
+    // 처음 실행하면 거래를 바로 적을 수 있게 잔액 0원인 현금 자산 하나만 둡니다.
+    if (!await repository.isInitialized()) {
+      await repository.replace(
+        LedgerBook(
+          assets: [
+            AssetAccount(
+              id: 'cash',
+              name: 'asset.kind.cash'.tr(),
+              kind: AssetKind.cash,
+              balance: 0,
+            ),
+          ],
+        ),
+      );
     }
     return repository.load();
   }

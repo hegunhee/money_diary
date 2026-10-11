@@ -15,7 +15,7 @@ lib/
 │   ├── models/           # 가계부 모델 (LedgerEntry · AssetAccount · Project · LedgerBook)
 │   ├── repositories/     # 로컬 DB(Hive) 읽기·쓰기 (ledger_repository)
 │   ├── controllers/      # 여러 화면이 쓰는 상태 (가계부 · 보는 달 · 하단 탭)
-│   ├── util/             # 계산(ledger_calculator) · 표기(ledger_labels · won_format)
+│   ├── util/             # 계산(ledger_calculator) · 표기(ledger_labels · won_format) · 금액 입력(won_input)
 │   └── widgets/          # 공용 UI (카드 · 배지 · 거래 줄 · 버튼 · 하단 탭)
 └── features/<feature>/
     ├── models/           # 데이터 모델
@@ -37,9 +37,9 @@ lib/
 - `LedgerRepository` 만 Hive 를 압니다. 화면 테스트는 `test/helpers/pump_app.dart` 의
   `FakeLedgerRepository` 로 바꿔 끼웁니다.
 - 거래를 더하면 `applyEntry` 가 자산 잔액을 함께 고쳐 저장합니다.
-- **개발 빌드**는 처음 실행할 때 시안의 예시 가계부(`shared/util/sample_ledger.dart`)를 채워
-  화면을 바로 확인할 수 있게 합니다. 릴리스 빌드는 빈 가계부로 시작하고, 자산과 예산은
-  설정 탭에서 더합니다.
+- 앱은 **빈 가계부(순자산 0원)**로 시작합니다. 처음 실행하면 거래를 바로 적을 수 있게 잔액
+  0원인 현금 자산 하나만 만들고, 나머지 자산·예산·프로젝트는 사용자가 더합니다.
+- 시안의 예시 가계부는 테스트 전용입니다(`test/helpers/sample_ledger.dart`).
 
 ## 데이터 흐름
 

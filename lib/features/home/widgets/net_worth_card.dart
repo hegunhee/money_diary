@@ -61,24 +61,6 @@ class NetWorthCard extends HookWidget {
                   color: colors.textSecondary,
                 ),
               ),
-              const Spacer(),
-              if (change != null && previous > 0 && !hidden.value)
-                Flexible(
-                  flex: 4,
-                  child: AppBadge(
-                    'home.vs_last_month'.tr(
-                      namedArgs: {
-                        'amount':
-                            '${change >= 0 ? '+' : '-'}${wonLabel(change.abs())}',
-                        'percent':
-                            '${change >= 0 ? '+' : '-'}${percentLabel(change.abs() / previous)}',
-                      },
-                    ),
-                    icon: change >= 0 ? Icons.trending_up : Icons.trending_down,
-                    background: colors.surfaceHigh,
-                    foreground: colors.primary,
-                  ),
-                ),
             ],
           ),
           Row(
@@ -101,6 +83,26 @@ class NetWorthCard extends HookWidget {
               ),
             ],
           ),
+          // 금액과 비율이 함께 들어가 길어서 머리줄 옆이 아니라 금액 아래 한 줄을 씁니다.
+          if (change != null && previous > 0 && !hidden.value) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: AppBadge(
+                'home.vs_last_month'.tr(
+                  namedArgs: {
+                    'amount':
+                        '${change >= 0 ? '+' : '-'}${wonLabel(change.abs())}',
+                    'percent':
+                        '${change >= 0 ? '+' : '-'}${percentLabel(change.abs() / previous)}',
+                  },
+                ),
+                icon: change >= 0 ? Icons.trending_up : Icons.trending_down,
+                background: colors.surfaceHigh,
+                foreground: colors.primary,
+              ),
+            ),
+          ],
           const SizedBox(height: AppSpacing.lg),
           Wrap(
             spacing: 6,
