@@ -66,6 +66,23 @@ void main() {
     expect(budgetUsage(1000, 0), 0);
   });
 
+  test('연속 기록은 오늘부터 거슬러 세고 하루라도 비면 거기서 끊는다', () {
+    final entries = [
+      for (final day in [18, 17, 16, 14])
+        LedgerEntry(
+          id: '$day',
+          type: EntryType.expense,
+          amount: 1000,
+          title: '거래',
+          occurredAt: DateTime(2026, 3, day, 9),
+          assetId: 'bank',
+        ),
+    ];
+
+    expect(recordStreak(entries, DateTime(2026, 3, 18, 23)), 3);
+    expect(recordStreak(entries, DateTime(2026, 3, 19)), 0);
+  });
+
   group('applyEntry', () {
     const assets = [
       AssetAccount(id: 'bank', name: '통장', kind: AssetKind.bank, balance: 1000),

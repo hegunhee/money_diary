@@ -90,5 +90,27 @@
     "see_all": "전체보기",
     "empty_title": "아직 기록이 없어요",
     "empty_description": "첫 지출을 기록하면 여기에 모여요."
+  },
+  "history": {
+    "income": "수입",
+    "expense": "지출",
+    "balance": "이번 달 잔액",
+    "budget_usage": "예산 사용률 {}",
+    "budget_left": "잔여 예산 {}",
+    "budget_over": "예산 초과 {}",
+    "filter": {
+      "all": "전체",
+      "expense": "지출만",
+      "income": "수입만",
+      "transfer": "이체만",
+      "project": "프로젝트별"
+    },
+    "sort_newest": "최신순 정렬",
+    "sort_oldest": "오래된순 정렬",
+    "count": "총 {}건 내역",
+    "transfer_count": "(이체 {}건)",
+    "empty": "이 조건에 맞는 내역이 없어요.",
+    "streak_title": "{}일 연속 기록 달성!",
+    "streak_description": "꾸준히 기록할수록 소비 흐름이 또렷해져요."
   }
 }

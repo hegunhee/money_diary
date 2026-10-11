@@ -108,6 +108,23 @@ int projectSpent(Iterable<LedgerEntry> entries, String projectId) {
   return spent;
 }
 
+/// [today]까지 하루도 빠지지 않고 기록한 날 수입니다. 오늘 기록이 없으면 0입니다.
+int recordStreak(Iterable<LedgerEntry> entries, DateTime today) {
+  final days = {
+    for (final entry in entries)
+      DateTime(
+        entry.occurredAt.year,
+        entry.occurredAt.month,
+        entry.occurredAt.day,
+      ),
+  };
+  var streak = 0;
+  while (days.contains(DateTime(today.year, today.month, today.day - streak))) {
+    streak++;
+  }
+  return streak;
+}
+
 /// 순자산. 카드·간편결제의 결제 예정 금액은 더하지 않습니다.
 int netWorth(Iterable<AssetAccount> assets) => assetTotal(
   assets.where((asset) => asset.kind.countsTowardNetWorth),
