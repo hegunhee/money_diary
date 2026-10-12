@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money_diary/core/themes/app_spacing.dart';
 import 'package:money_diary/features/entry/screens/entry_screen.dart';
 import 'package:money_diary/features/home/widgets/monthly_status_card.dart';
-import 'package:money_diary/features/home/widgets/net_worth_card.dart';
 import 'package:money_diary/features/home/widgets/quick_action_row.dart';
 import 'package:money_diary/features/home/widgets/recent_entries_section.dart';
 import 'package:money_diary/shared/controllers/ledger_controller.dart';
@@ -17,7 +16,7 @@ import 'package:money_diary/shared/widgets/entry_delete_dialog.dart';
 import 'package:money_diary/shared/widgets/month_selector.dart';
 import 'package:money_diary/shared/widgets/project_card.dart';
 
-/// 홈 대시보드 — 순자산, 이번 달 현황, 진행 중인 프로젝트, 최근 거래
+/// 홈 대시보드 — 이번 달 현황, 진행 중인 프로젝트, 최근 거래
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -57,11 +56,6 @@ class HomeScreen extends ConsumerWidget {
                   alignment: Alignment.centerLeft,
                   child: MonthSelector(),
                 ),
-                NetWorthCard(
-                  assets: book.assets,
-                  monthlyChange: isThisMonth ? totals.net : null,
-                ),
-                const SizedBox(height: AppSpacing.lg),
                 MonthlyStatusCard(
                   month: month,
                   totals: totals,

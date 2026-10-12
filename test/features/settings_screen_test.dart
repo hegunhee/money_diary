@@ -10,7 +10,7 @@ void main() {
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     await pumpApp(tester, const SettingsScreen());
-    expect(find.text('순자산 ₩ 18,450,200'), findsOneWidget);
+    expect(find.text('18,450,200'), findsOneWidget);
 
     await tester.tap(find.text('자산 추가'));
     await tester.pumpAndSettle();
@@ -23,7 +23,7 @@ void main() {
     await tester.tap(find.text('저장'));
     await tester.pumpAndSettle();
     expect(find.text('비상금 통장'), findsOneWidget);
-    expect(find.text('순자산 ₩ 19,450,200'), findsOneWidget);
+    expect(find.text('19,450,200'), findsOneWidget);
 
     await tester.tap(find.text('현대카드 ZERO'));
     await tester.pumpAndSettle();

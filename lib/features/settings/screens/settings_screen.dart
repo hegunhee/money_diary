@@ -5,7 +5,9 @@ import 'package:money_diary/core/themes/app_colors.dart';
 import 'package:money_diary/core/themes/app_spacing.dart';
 import 'package:money_diary/core/themes/app_typography.dart';
 import 'package:money_diary/features/settings/widgets/budget_edit_sheet.dart';
+import 'package:money_diary/features/settings/widgets/net_worth_card.dart';
 import 'package:money_diary/shared/controllers/ledger_controller.dart';
+import 'package:money_diary/shared/controllers/today_controller.dart';
 import 'package:money_diary/shared/models/asset_account.dart';
 import 'package:money_diary/shared/util/ledger_calculator.dart';
 import 'package:money_diary/shared/util/ledger_labels.dart';
@@ -24,6 +26,7 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
     final ledger = ref.watch(ledgerProvider);
+    final today = ref.watch(todayProvider);
 
     void editAsset([AssetAccount? asset]) => showAppSheet<void>(
       context,
@@ -119,24 +122,11 @@ class SettingsScreen extends ConsumerWidget {
               Row(
                 children: [
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'settings.assets'.tr(),
-                          style: AppTypography.headlineSm.copyWith(
-                            color: colors.textPrimary,
-                          ),
-                        ),
-                        Text(
-                          'settings.net_worth'.tr(
-                            args: [wonSymbolLabel(netWorth(book.assets))],
-                          ),
-                          style: AppTypography.labelMd.copyWith(
-                            color: colors.textSecondary,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      'settings.assets'.tr(),
+                      style: AppTypography.headlineSm.copyWith(
+                        color: colors.textPrimary,
+                      ),
                     ),
                   ),
                   TextButton.icon(
@@ -145,6 +135,12 @@ class SettingsScreen extends ConsumerWidget {
                     label: Text('settings.asset_add'.tr()),
                   ),
                 ],
+              ),
+              NetWorthCard(
+                assets: book.assets,
+                monthlyChange: totalsOf(
+                  entriesInMonth(book.entries, today),
+                ).net,
               ),
               const SizedBox(height: AppSpacing.sm),
               if (book.assets.isEmpty)

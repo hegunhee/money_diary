@@ -68,10 +68,6 @@
     "delete_confirm": "Delete '{title}' {amount}? Account balances will be restored too."
   },
   "home": {
-    "net_worth": "Net worth",
-    "hide_amount": "Hide amounts",
-    "show_amount": "Show amounts",
-    "vs_last_month": "vs last month {amount} ({percent})",
     "month_status": "Month {}",
     "day_count": "Day {}",
     "savings_rate": "Saved {}",
@@ -218,7 +214,10 @@
     "budget_unset": "Not set",
     "budget_hint": "Leave it empty and save to turn the budget off.",
     "assets": "Accounts",
-    "net_worth": "Net worth {}",
+    "net_worth": "Net worth",
+    "hide_amount": "Hide amounts",
+    "show_amount": "Show amounts",
+    "vs_last_month": "vs last month {amount} ({percent})",
     "assets_empty": "No accounts yet. Add an account or card first.",
     "asset_add": "Add account",
     "asset_edit": "Edit account",
