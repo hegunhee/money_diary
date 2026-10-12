@@ -59,6 +59,9 @@ class FakeLedgerRepository implements LedgerRepository {
   Future<void> saveAsset(AssetAccount asset) async {}
 
   @override
+  Future<void> saveAssetOrder(List<String> ids) async {}
+
+  @override
   Future<void> deleteAsset(String id) async {}
 
   @override

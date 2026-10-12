@@ -185,6 +185,24 @@ int netWorth(Iterable<AssetAccount> assets) => assetTotal(
 int assetTotal(Iterable<AssetAccount> assets) =>
     assets.fold(0, (sum, asset) => sum + asset.balance);
 
+/// 보이는 자산([visible]) 가운데 [from]번째를 [to]번째 자리로 옮긴 전체 목록을 냅니다.
+///
+/// 종류 탭으로 걸러 본 목록에서 옮겨도, 가려져 있던 자산은 제자리에 둡니다.
+List<AssetAccount> moveAsset(
+  List<AssetAccount> assets,
+  bool Function(AssetAccount asset) visible,
+  int from,
+  int to,
+) {
+  final shown = assets.where(visible).toList();
+  shown.insert(to, shown.removeAt(from));
+  final next = shown.iterator;
+  return [
+    for (final asset in assets)
+      if (visible(asset)) (next..moveNext()).current else asset,
+  ];
+}
+
 /// [month]의 날 수로 나눈 하루 평균 지출입니다.
 int dailyAverage(int expense, DateTime month) =>
     expense ~/ DateTime(month.year, month.month + 1, 0).day;

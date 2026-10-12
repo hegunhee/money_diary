@@ -20,6 +20,19 @@ LedgerEntry _entry(EntryType type, int amount, {String to = 'bank'}) =>
 
 void main() {
   final book = buildSampleLedger(DateTime(2026, 3, 18));
+
+  test('걸러 본 목록에서 자산을 옮겨도 가려진 자산은 제자리에 남는다', () {
+    const assets = [
+      AssetAccount(id: 'a', name: 'a', kind: AssetKind.bank, balance: 0),
+      AssetAccount(id: 'x', name: 'x', kind: AssetKind.cash, balance: 0),
+      AssetAccount(id: 'b', name: 'b', kind: AssetKind.bank, balance: 0),
+      AssetAccount(id: 'c', name: 'c', kind: AssetKind.bank, balance: 0),
+    ];
+
+    final moved = moveAsset(assets, (a) => a.kind == AssetKind.bank, 0, 2);
+
+    expect([for (final asset in moved) asset.id], ['b', 'x', 'c', 'a']);
+  });
   final march = entriesInMonth(book.entries, DateTime(2026, 3));
 
   test('이체는 수입·지출 합계와 카테고리·결제 수단 통계에 들어가지 않는다', () {

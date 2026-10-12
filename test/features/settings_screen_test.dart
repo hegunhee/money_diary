@@ -51,4 +51,20 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('토스뱅크'), findsOneWidget);
   });
+
+  testWidgets('자산을 왼쪽으로 밀면 바로 지우지 않고 지울지 묻는다', (tester) async {
+    tester.view.physicalSize = const Size(430, 1800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final repository = await pumpApp(tester, const SettingsScreen());
+
+    await tester.drag(find.text('주택청약'), const Offset(-360, 0));
+    await tester.pumpAndSettle();
+    expect(find.text("'주택청약' 자산을 지울까요? 되돌릴 수 없어요."), findsOneWidget);
+
+    await tester.tap(find.text('취소'));
+    await tester.pumpAndSettle();
+    expect(find.text('주택청약'), findsOneWidget);
+    expect(repository.book.assets, hasLength(8));
+  });
 }
