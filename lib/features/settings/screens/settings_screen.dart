@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money_diary/core/themes/app_colors.dart';
 import 'package:money_diary/core/themes/app_spacing.dart';
@@ -14,17 +15,22 @@ import 'package:money_diary/shared/util/ledger_labels.dart';
 import 'package:money_diary/shared/widgets/app_card.dart';
 import 'package:money_diary/shared/widgets/app_content_width.dart';
 import 'package:money_diary/shared/widgets/app_error_view.dart';
+import 'package:money_diary/shared/widgets/app_filter_chip.dart';
 import 'package:money_diary/shared/widgets/app_sheet.dart';
 import 'package:money_diary/shared/widgets/app_tap_row.dart';
 import 'package:money_diary/shared/widgets/asset_edit_sheet.dart';
 
 /// 설정 — 한 달 예산과 자산(계좌·카드·현금)을 관리합니다.
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends HookConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    // 자산 목록을 거르는 탭. null이면 전체를 보여 줍니다.
+    final kind = useState<AssetKind?>(null);
+    bool inTab(AssetAccount asset) =>
+        kind.value == null || asset.kind == kind.value;
     final ledger = ref.watch(ledgerProvider);
     final today = ref.watch(todayProvider);
 
@@ -143,10 +149,35 @@ class SettingsScreen extends ConsumerWidget {
                 ).net,
               ),
               const SizedBox(height: AppSpacing.sm),
-              if (book.assets.isEmpty)
+              if (book.assets.isNotEmpty) ...[
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      AppFilterChip(
+                        label: 'settings.asset_tab_all'.tr(),
+                        selected: kind.value == null,
+                        onTap: () => kind.value = null,
+                      ),
+                      for (final item in AssetKind.values) ...[
+                        const SizedBox(width: AppSpacing.sm),
+                        AppFilterChip(
+                          label: item.label,
+                          selected: item == kind.value,
+                          onTap: () => kind.value = item,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+              ],
+              if (!book.assets.any(inTab))
                 AppCard(
                   child: Text(
-                    'settings.assets_empty'.tr(),
+                    book.assets.isEmpty
+                        ? 'settings.assets_empty'.tr()
+                        : 'settings.asset_tab_empty'.tr(),
                     textAlign: TextAlign.center,
                     style: AppTypography.bodyMd.copyWith(
                       color: colors.textSecondary,
@@ -158,7 +189,8 @@ class SettingsScreen extends ConsumerWidget {
                   padding: EdgeInsets.zero,
                   child: Column(
                     children: [
-                      for (final (index, asset) in book.assets.indexed) ...[
+                      for (final (index, asset)
+                          in book.assets.where(inTab).indexed) ...[
                         if (index > 0)
                           Divider(
                             height: 1,
