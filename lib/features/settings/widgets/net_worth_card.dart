@@ -13,12 +13,16 @@ import 'package:money_diary/shared/widgets/app_card.dart';
 
 /// 총 순자산과 자산군별 합계를 보여 주는 카드
 class NetWorthCard extends HookWidget {
-  const NetWorthCard({required this.assets, this.monthlyChange, super.key});
+  const NetWorthCard({
+    required this.assets,
+    required this.monthlyChange,
+    super.key,
+  });
 
   final List<AssetAccount> assets;
 
-  /// 이번 달에 늘어난 금액(수입 − 지출). 이번 달을 보고 있지 않으면 null입니다.
-  final int? monthlyChange;
+  /// 이번 달에 늘어난 금액(수입 − 지출)
+  final int monthlyChange;
 
   static const _hidden = '••••••';
 
@@ -28,7 +32,7 @@ class NetWorthCard extends HookWidget {
     final hidden = useState(false);
     final total = netWorth(assets);
     final change = monthlyChange;
-    final previous = change == null ? 0 : total - change;
+    final previous = total - change;
     final groups = [
       (AssetKind.bank, colors.primary),
       (AssetKind.investment, colors.income),
@@ -42,15 +46,15 @@ class NetWorthCard extends HookWidget {
           Row(
             children: [
               Text(
-                'home.net_worth'.tr(),
+                'settings.net_worth'.tr(),
                 style: AppTypography.labelMd.copyWith(
                   color: colors.textSecondary,
                 ),
               ),
               IconButton(
                 tooltip: hidden.value
-                    ? 'home.show_amount'.tr()
-                    : 'home.hide_amount'.tr(),
+                    ? 'settings.show_amount'.tr()
+                    : 'settings.hide_amount'.tr(),
                 visualDensity: VisualDensity.compact,
                 iconSize: 18,
                 onPressed: () => hidden.value = !hidden.value,
@@ -84,12 +88,12 @@ class NetWorthCard extends HookWidget {
             ],
           ),
           // 금액과 비율이 함께 들어가 길어서 머리줄 옆이 아니라 금액 아래 한 줄을 씁니다.
-          if (change != null && previous > 0 && !hidden.value) ...[
+          if (previous > 0 && !hidden.value) ...[
             const SizedBox(height: AppSpacing.sm),
             Align(
               alignment: Alignment.centerLeft,
               child: AppBadge(
-                'home.vs_last_month'.tr(
+                'settings.vs_last_month'.tr(
                   namedArgs: {
                     'amount':
                         '${change >= 0 ? '+' : '-'}${wonLabel(change.abs())}',

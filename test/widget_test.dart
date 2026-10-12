@@ -19,7 +19,6 @@ void main() {
     for (final theme in [AppTheme.lightTheme, AppTheme.darkTheme]) {
       await pumpApp(tester, const MainScreen(), theme: theme);
 
-      expect(find.text('18,450,200'), findsOneWidget);
       expect(find.text('+ 4,250,000원'), findsOneWidget);
       expect(find.text('- 2,184,500원'), findsOneWidget);
       await tester.scrollUntilVisible(find.text('삼진어묵'), 300);
