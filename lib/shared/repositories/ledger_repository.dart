@@ -22,6 +22,7 @@ class LedgerRepository {
   static const _settings = 'ledger_settings';
   static const _monthlyBudget = 'monthlyBudget';
   static const _initialized = 'initialized';
+  static const _assetOrder = 'assetOrder';
 
   Future<Box<Map<dynamic, dynamic>>> _box(String name) => Hive.openBox(name);
 
@@ -37,12 +38,22 @@ class LedgerRepository {
     List<Map<String, dynamic>> rows(Box<Map<dynamic, dynamic>> box) => [
       for (final row in box.values) Map<String, dynamic>.from(row),
     ];
+    final order = [...?(settings.get(_assetOrder) as List<dynamic>?)];
+    // 순서를 정한 적 없는 자산은 맨 뒤로 보냅니다.
+    int position(AssetAccount asset) {
+      final index = order.indexOf(asset.id);
+      return index < 0 ? order.length : index;
+    }
+
     return LedgerBook(
       entries: rows(await _box(_entries)).map(LedgerEntry.fromJson).toList(),
-      // 상자는 id 순으로 돌려주므로, 종류별로 모아 이름순으로 보여 줍니다.
+      // 상자는 id 순으로 돌려주므로, 사용자가 정한 순서대로 놓고 나머지는 종류별로 모아
+      // 이름순으로 보여 줍니다.
       assets: rows(await _box(_assets)).map(AssetAccount.fromJson).toList()
         ..sort(
-          (a, b) => a.kind == b.kind
+          (a, b) => position(a) != position(b)
+              ? position(a).compareTo(position(b))
+              : a.kind == b.kind
               ? a.name.compareTo(b.name)
               : a.kind.index.compareTo(b.kind.index),
         ),
@@ -109,6 +120,11 @@ class LedgerRepository {
   /// 자산 하나를 더하거나 고쳐 저장합니다.
   Future<void> saveAsset(AssetAccount asset) async {
     await (await _box(_assets)).put(asset.id, asset.toJson());
+  }
+
+  /// 자산을 보여 주는 순서를 자산 id 목록으로 저장합니다.
+  Future<void> saveAssetOrder(List<String> ids) async {
+    await (await Hive.openBox<Object>(_settings)).put(_assetOrder, ids);
   }
 
   /// 자산 하나를 지웁니다.

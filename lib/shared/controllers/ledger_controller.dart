@@ -115,6 +115,21 @@ class LedgerController extends AsyncNotifier<LedgerBook> {
     );
   }
 
+  /// 자산을 보여 주는 순서를 바꿉니다. [assets]는 같은 자산을 새 순서로 늘어놓은 목록입니다.
+  Future<void> reorderAssets(List<AssetAccount> assets) async {
+    final book = await future;
+    // 끌어다 놓은 줄이 저장을 기다리는 동안 제자리로 튀지 않게 먼저 반영합니다.
+    state = AsyncData(book.copyWith(assets: assets));
+    try {
+      await ref.read(ledgerRepositoryProvider).saveAssetOrder([
+        for (final asset in assets) asset.id,
+      ]);
+    } on Object {
+      state = AsyncData(book);
+      rethrow;
+    }
+  }
+
   /// 자산을 지웁니다. 그 자산을 쓴 거래가 있으면 지우지 않고 false를 돌려줍니다.
   Future<bool> deleteAsset(String id) async {
     final book = await future;

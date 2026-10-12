@@ -59,4 +59,23 @@ void main() {
     expect(book.projects.single.budget, 1500000);
     expect(book.monthlyBudget, 4000000);
   });
+
+  test('정한 자산 순서는 다시 열어도 남고 순서를 정하지 않은 자산은 뒤에 온다', () async {
+    final repository = LedgerRepository();
+    await repository.replace(buildSampleLedger(DateTime(2026, 3, 18)));
+    await repository.saveAssetOrder(['cash', 'kakao-bank']);
+    await Hive.close();
+    Hive.init(directory.path);
+
+    final assets = (await LedgerRepository().load()).assets;
+
+    expect(
+      [for (final asset in assets.take(3)) asset.id],
+      [
+        'cash',
+        'kakao-bank',
+        'shinhan-bank',
+      ],
+    );
+  });
 }
