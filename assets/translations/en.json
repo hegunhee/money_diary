@@ -219,6 +219,8 @@
     "show_amount": "Show amounts",
     "vs_last_month": "vs last month {amount} ({percent})",
     "assets_empty": "No accounts yet. Add an account or card first.",
+    "asset_tab_all": "All",
+    "asset_tab_empty": "No accounts of this kind yet.",
     "asset_add": "Add account",
     "asset_edit": "Edit account",
     "asset_name": "Name",

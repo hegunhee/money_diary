@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:money_diary/features/settings/screens/settings_screen.dart';
+import 'package:money_diary/shared/widgets/app_filter_chip.dart';
 
 import '../helpers/pump_app.dart';
 
@@ -32,5 +33,22 @@ void main() {
     await tester.tap(find.text('삭제'));
     await tester.pumpAndSettle();
     expect(find.text('이 자산을 쓴 거래가 있어 지울 수 없어요.'), findsOneWidget);
+  });
+
+  testWidgets('자산 종류 탭을 고르면 그 종류의 자산만 보인다', (tester) async {
+    tester.view.physicalSize = const Size(430, 1800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await pumpApp(tester, const SettingsScreen());
+
+    await tester.tap(find.widgetWithText(AppFilterChip, '투자·청약'));
+    await tester.pumpAndSettle();
+    expect(find.text('주택청약'), findsOneWidget);
+    expect(find.text('증권 계좌'), findsOneWidget);
+    expect(find.text('토스뱅크'), findsNothing);
+
+    await tester.tap(find.text('전체'));
+    await tester.pumpAndSettle();
+    expect(find.text('토스뱅크'), findsOneWidget);
   });
 }
