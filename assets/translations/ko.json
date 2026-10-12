@@ -1,7 +1,6 @@
 {
   "common": {
     "app_name": "포켓가계부",
-    "app_subtitle": "Pocket Ledger",
     "retry": "다시 시도",
     "load_failed": "가계부를 불러오지 못했어요.",
     "won": "{}원",

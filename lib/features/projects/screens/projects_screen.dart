@@ -13,7 +13,6 @@ import 'package:money_diary/shared/widgets/app_card.dart';
 import 'package:money_diary/shared/widgets/app_content_width.dart';
 import 'package:money_diary/shared/widgets/app_error_view.dart';
 import 'package:money_diary/shared/widgets/app_sheet.dart';
-import 'package:money_diary/shared/widgets/app_top_bar.dart';
 import 'package:money_diary/shared/widgets/project_card.dart';
 
 /// 프로젝트 — 여행·이사처럼 목적별 예산을 진행 중과 보관됨으로 나눠 관리합니다.
@@ -59,7 +58,6 @@ class ProjectsScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppTopBar(section: 'nav.projects'.tr()),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: edit,
         backgroundColor: colors.primary,
