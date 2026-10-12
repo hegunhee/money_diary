@@ -26,18 +26,22 @@ class MainScreen extends HookConsumerWidget {
       }
     });
     return Scaffold(
-      body: IndexedStack(
-        index: tab.index,
-        children: [
-          for (final tab in MainTab.values)
-            switch (tab) {
-              MainTab.home => const HomeScreen(),
-              MainTab.history => const HistoryScreen(),
-              MainTab.report => const ReportScreen(),
-              MainTab.projects => const ProjectsScreen(),
-              MainTab.settings => const SettingsScreen(),
-            },
-        ],
+      // 탭 화면에는 앱바가 없어 상태바에 가리지 않게 위쪽만 비웁니다.
+      body: SafeArea(
+        bottom: false,
+        child: IndexedStack(
+          index: tab.index,
+          children: [
+            for (final tab in MainTab.values)
+              switch (tab) {
+                MainTab.home => const HomeScreen(),
+                MainTab.history => const HistoryScreen(),
+                MainTab.report => const ReportScreen(),
+                MainTab.projects => const ProjectsScreen(),
+                MainTab.settings => const SettingsScreen(),
+              },
+          ],
+        ),
       ),
       bottomNavigationBar: const AppBottomNavigation(),
     );

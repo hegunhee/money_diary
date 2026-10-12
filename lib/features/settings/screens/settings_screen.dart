@@ -14,7 +14,6 @@ import 'package:money_diary/shared/widgets/app_content_width.dart';
 import 'package:money_diary/shared/widgets/app_error_view.dart';
 import 'package:money_diary/shared/widgets/app_sheet.dart';
 import 'package:money_diary/shared/widgets/app_tap_row.dart';
-import 'package:money_diary/shared/widgets/app_top_bar.dart';
 import 'package:money_diary/shared/widgets/asset_edit_sheet.dart';
 
 /// 설정 — 한 달 예산과 자산(계좌·카드·현금)을 관리합니다.
@@ -63,7 +62,6 @@ class SettingsScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppTopBar(section: 'nav.settings'.tr()),
       body: ledger.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => AppErrorView(

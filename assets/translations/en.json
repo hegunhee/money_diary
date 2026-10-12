@@ -1,7 +1,6 @@
 {
   "common": {
     "app_name": "Pocket Ledger",
-    "app_subtitle": "Pocket Ledger",
     "retry": "Try again",
     "load_failed": "Couldn't load your ledger.",
     "won": "₩{}",

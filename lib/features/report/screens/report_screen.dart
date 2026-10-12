@@ -22,7 +22,6 @@ import 'package:money_diary/shared/widgets/app_card.dart';
 import 'package:money_diary/shared/widgets/app_content_width.dart';
 import 'package:money_diary/shared/widgets/app_error_view.dart';
 import 'package:money_diary/shared/widgets/app_fill_button.dart';
-import 'package:money_diary/shared/widgets/app_top_bar.dart';
 import 'package:money_diary/shared/widgets/month_selector.dart';
 
 /// 월간 분석 리포트 — 저축액과 카테고리·자산·프로젝트별 지출 비중
@@ -37,7 +36,6 @@ class ReportScreen extends HookConsumerWidget {
     final month = ref.watch(selectedMonthProvider);
 
     return Scaffold(
-      appBar: AppTopBar(section: 'nav.report'.tr()),
       body: ledger.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => AppErrorView(

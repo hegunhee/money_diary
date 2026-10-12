@@ -16,7 +16,6 @@ import 'package:money_diary/shared/widgets/app_card.dart';
 import 'package:money_diary/shared/widgets/app_content_width.dart';
 import 'package:money_diary/shared/widgets/app_error_view.dart';
 import 'package:money_diary/shared/widgets/app_filter_chip.dart';
-import 'package:money_diary/shared/widgets/app_top_bar.dart';
 import 'package:money_diary/shared/widgets/entry_delete_dialog.dart';
 import 'package:money_diary/shared/widgets/month_selector.dart';
 
@@ -34,7 +33,6 @@ class HistoryScreen extends HookConsumerWidget {
     final today = ref.watch(todayProvider);
 
     return Scaffold(
-      appBar: AppTopBar(section: 'nav.history'.tr()),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => Navigator.of(context).push(EntryScreen.route()),
         backgroundColor: colors.primary,
