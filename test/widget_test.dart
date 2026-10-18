@@ -29,7 +29,9 @@ void main() {
     }
   });
 
-  testWidgets('홈에서 총 수입·총 지출을 누르면 내역으로 옮겨 그 종류만 보여 준다', (tester) async {
+  testWidgets('홈에서 총 수입·총 지출을 누르면 내역으로 옮겨 그 종류만 보여 주고, 뒤로 가면 홈으로 온다', (
+    tester,
+  ) async {
     final repository = await pumpApp(tester, const MainScreen());
     final month = entriesInMonth(repository.book.entries, designToday);
     int countOf(EntryType type) =>
@@ -43,7 +45,8 @@ void main() {
     );
     expect(find.text('스타벅스 리저브'), findsNothing);
 
-    await tester.tap(find.text('홈'));
+    // 뒤로 가면 앱을 닫지 않고 홈으로 돌아옵니다.
+    await tester.binding.handlePopRoute();
     await tester.pumpAndSettle();
     await tester.tap(find.text('총 지출'));
     await tester.pumpAndSettle();
