@@ -25,25 +25,34 @@ class MainScreen extends HookConsumerWidget {
         ref.read(ledgerProvider.notifier).registerDueRecurring();
       }
     });
-    return Scaffold(
-      // 탭 화면에는 앱바가 없어 상태바에 가리지 않게 위쪽만 비웁니다.
-      body: SafeArea(
-        bottom: false,
-        child: IndexedStack(
-          index: tab.index,
-          children: [
-            for (final tab in MainTab.values)
-              switch (tab) {
-                MainTab.home => const HomeScreen(),
-                MainTab.history => const HistoryScreen(),
-                MainTab.report => const ReportScreen(),
-                MainTab.projects => const ProjectsScreen(),
-                MainTab.settings => const SettingsScreen(),
-              },
-          ],
+    // 홈이 아닌 탭에서 뒤로 가면 앱을 닫지 않고 홈으로 돌아갑니다.
+    return PopScope(
+      canPop: tab == MainTab.home,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          ref.read(mainTabProvider.notifier).select(MainTab.home);
+        }
+      },
+      child: Scaffold(
+        // 탭 화면에는 앱바가 없어 상태바에 가리지 않게 위쪽만 비웁니다.
+        body: SafeArea(
+          bottom: false,
+          child: IndexedStack(
+            index: tab.index,
+            children: [
+              for (final tab in MainTab.values)
+                switch (tab) {
+                  MainTab.home => const HomeScreen(),
+                  MainTab.history => const HistoryScreen(),
+                  MainTab.report => const ReportScreen(),
+                  MainTab.projects => const ProjectsScreen(),
+                  MainTab.settings => const SettingsScreen(),
+                },
+            ],
+          ),
         ),
+        bottomNavigationBar: const AppBottomNavigation(),
       ),
-      bottomNavigationBar: const AppBottomNavigation(),
     );
   }
 }
