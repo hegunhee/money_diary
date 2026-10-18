@@ -97,10 +97,6 @@ class AmountInputCard extends StatelessWidget {
                   label: Text('entry.amount_step.$step'.tr()),
                   onPressed: () => _set(parseWon(controller.text) + step),
                 ),
-              ActionChip(
-                label: Text('entry.amount_reset'.tr()),
-                onPressed: () => _set(0),
-              ),
             ],
           ),
         ],

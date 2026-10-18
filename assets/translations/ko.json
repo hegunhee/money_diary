@@ -130,7 +130,6 @@
       "10000": "+1만",
       "50000": "+5만"
     },
-    "amount_reset": "초기화",
     "amount_delete": "한 자리 지우기",
     "date": "일시",
     "asset_label": {
