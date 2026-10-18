@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money_diary/core/themes/app_spacing.dart';
 import 'package:money_diary/features/entry/screens/entry_screen.dart';
+import 'package:money_diary/features/history/controllers/history_filter_controller.dart';
+import 'package:money_diary/features/history/models/ledger_filter.dart';
 import 'package:money_diary/features/home/widgets/monthly_status_card.dart';
 import 'package:money_diary/features/home/widgets/quick_action_row.dart';
 import 'package:money_diary/features/home/widgets/recent_entries_section.dart';
@@ -29,6 +31,11 @@ class HomeScreen extends ConsumerWidget {
     final month = ref.watch(selectedMonthProvider);
     final today = ref.watch(todayProvider);
     final isThisMonth = month.year == today.year && month.month == today.month;
+
+    void showHistory(LedgerFilter filter) {
+      ref.read(historyFilterProvider.notifier).select(filter);
+      ref.read(mainTabProvider.notifier).select(MainTab.history);
+    }
 
     return Scaffold(
       body: ledger.when(
@@ -61,6 +68,8 @@ class HomeScreen extends ConsumerWidget {
                   totals: totals,
                   monthlyBudget: book.monthlyBudget,
                   dayOfMonth: isThisMonth ? today.day : null,
+                  onIncomeTap: () => showHistory(LedgerFilter.income),
+                  onExpenseTap: () => showHistory(LedgerFilter.expense),
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 QuickActionRow(

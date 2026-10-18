@@ -29,6 +29,30 @@ void main() {
     }
   });
 
+  testWidgets('홈에서 총 수입·총 지출을 누르면 내역으로 옮겨 그 종류만 보여 준다', (tester) async {
+    final repository = await pumpApp(tester, const MainScreen());
+    final month = entriesInMonth(repository.book.entries, designToday);
+    int countOf(EntryType type) =>
+        month.where((entry) => entry.type == type).length;
+
+    await tester.tap(find.text('총 수입'));
+    await tester.pumpAndSettle();
+    expect(
+      find.text('총 ${countOf(EntryType.income)}건 내역'),
+      findsOneWidget,
+    );
+    expect(find.text('스타벅스 리저브'), findsNothing);
+
+    await tester.tap(find.text('홈'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('총 지출'));
+    await tester.pumpAndSettle();
+    expect(
+      find.text('총 ${countOf(EntryType.expense)}건 내역'),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('기록이 없는 가계부도 홈이 열린다', (tester) async {
     await pumpApp(tester, const MainScreen(), book: const LedgerBook());
 
