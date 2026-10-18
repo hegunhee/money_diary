@@ -98,6 +98,17 @@ List<AssetShare> assetShares(
   ]..sort((a, b) => b.amount.compareTo(a.amount));
 }
 
+/// [assetId] 자산으로 결제한 지출의 합입니다. 이체로 빠져나간 돈은 세지 않습니다.
+int assetSpent(Iterable<LedgerEntry> entries, String assetId) {
+  var spent = 0;
+  for (final entry in entries) {
+    if (entry.assetId == assetId && entry.type == EntryType.expense) {
+      spent += entry.amount;
+    }
+  }
+  return spent;
+}
+
 /// 프로젝트에 묶인 지출의 합입니다. 기간과 상관없이 전체를 셉니다.
 int projectSpent(Iterable<LedgerEntry> entries, String projectId) {
   var spent = 0;

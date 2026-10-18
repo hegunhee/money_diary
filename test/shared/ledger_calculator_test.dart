@@ -76,6 +76,15 @@ void main() {
     expect(netWorth(book.assets), 18450200);
   });
 
+  test('자산별 지출에는 그 자산에서 나간 이체와 들어온 수입을 세지 않는다', () {
+    final entries = [
+      _entry(EntryType.expense, 1000, to: 'toss'),
+      _entry(EntryType.transfer, 5000),
+      _entry(EntryType.income, 7000, to: 'toss'),
+    ];
+    expect(assetSpent(entries, 'toss'), 1000);
+  });
+
   test('수입이 없으면 저축률은 0이고 예산이 없으면 사용률은 0이다', () {
     expect(totalsOf([_entry(EntryType.expense, 1000)]).savingsRate, 0);
     expect(budgetUsage(1000, 0), 0);

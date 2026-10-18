@@ -78,4 +78,26 @@ void main() {
       ],
     );
   });
+
+  test('자산별 예산이 없던 때 저장한 자산은 예산 0으로 읽히고, 정한 예산은 다시 열어도 남는다', () async {
+    final repository = LedgerRepository();
+    await repository.replace(buildSampleLedger(DateTime(2026, 3, 18)));
+    final assets = await Hive.openBox<Map<dynamic, dynamic>>('ledger_assets');
+    await assets.put('old', {
+      'id': 'old',
+      'name': '예전 통장',
+      'kind': 'bank',
+      'balance': 1000,
+    });
+    final cash = (await repository.load()).assetById('cash')!;
+    await repository.saveBudgets(2000000, [cash.withMonthlyBudget(300000)]);
+    await Hive.close();
+    Hive.init(directory.path);
+
+    final book = await LedgerRepository().load();
+    expect(book.assetById('old')!.monthlyBudget, 0);
+    expect(book.assetById('cash')!.monthlyBudget, 300000);
+    expect(book.assetById('cash')!.balance, cash.balance);
+    expect(book.monthlyBudget, 2000000);
+  });
 }

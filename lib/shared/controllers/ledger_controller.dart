@@ -206,11 +206,27 @@ class LedgerController extends AsyncNotifier<LedgerBook> {
     );
   }
 
-  /// 한 달 지출 예산을 바꿉니다.
-  Future<void> saveMonthlyBudget(int budget) async {
+  /// 한 달 지출 예산과 자산별 예산을 바꿉니다. [assetBudgets]는 자산 id별 예산이고,
+  /// 들어 있지 않은 자산의 예산은 그대로 둡니다.
+  Future<void> saveBudgets(
+    int monthlyBudget,
+    Map<String, int> assetBudgets,
+  ) async {
     final book = await future;
-    await ref.read(ledgerRepositoryProvider).saveMonthlyBudget(budget);
-    state = AsyncData(book.copyWith(monthlyBudget: budget));
+    final assets = [
+      for (final asset in book.assets)
+        asset.withMonthlyBudget(
+          assetBudgets[asset.id] ?? asset.monthlyBudget,
+        ),
+    ];
+    await ref.read(ledgerRepositoryProvider).saveBudgets(monthlyBudget, [
+      for (final asset in assets)
+        if (asset.monthlyBudget != book.assetById(asset.id)!.monthlyBudget)
+          asset,
+    ]);
+    state = AsyncData(
+      book.copyWith(monthlyBudget: monthlyBudget, assets: assets),
+    );
   }
 
   /// 같은 id가 있으면 그 자리에서 바꾸고, 없으면 끝에 더합니다.

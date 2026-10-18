@@ -77,7 +77,10 @@ class FakeLedgerRepository implements LedgerRepository {
   Future<void> deleteCategory(String id) async {}
 
   @override
-  Future<void> saveMonthlyBudget(int budget) async {}
+  Future<void> saveBudgets(
+    int monthlyBudget,
+    List<AssetAccount> assets,
+  ) async {}
 }
 
 /// 시안의 예시 가계부와 날짜로 [home]을 띄웁니다.

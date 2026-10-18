@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:money_diary/features/settings/screens/settings_screen.dart';
+import 'package:money_diary/shared/util/ledger_calculator.dart';
+import 'package:money_diary/shared/util/won_format.dart';
 import 'package:money_diary/shared/widgets/app_filter_chip.dart';
 
 import '../helpers/pump_app.dart';
@@ -66,5 +68,34 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('주택청약'), findsOneWidget);
     expect(repository.book.assets, hasLength(8));
+  });
+
+  testWidgets('자산별 예산을 정하면 이번 달 쓴 금액과 함께 보이고, 자산을 고쳐도 예산이 남는다', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(430, 2400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final repository = await pumpApp(tester, const SettingsScreen());
+
+    await tester.tap(find.text('한 달 지출 예산'));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.widgetWithText(TextField, '현대카드 ZERO'),
+      '1000000',
+    );
+    await tester.tap(find.text('저장'));
+    await tester.pumpAndSettle();
+    final spent = assetSpent(
+      entriesInMonth(repository.book.entries, designToday),
+      'hyundai-card',
+    );
+    expect(find.text('₩ ${formatWon(spent)} / ₩ 1,000,000'), findsOneWidget);
+
+    await tester.tap(find.text('현대카드 ZERO').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('저장'));
+    await tester.pumpAndSettle();
+    expect(find.text('₩ ${formatWon(spent)} / ₩ 1,000,000'), findsOneWidget);
   });
 }

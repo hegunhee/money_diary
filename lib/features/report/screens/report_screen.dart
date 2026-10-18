@@ -202,8 +202,21 @@ class ReportScreen extends HookConsumerWidget {
                               ShareRow(
                                 icon: share.asset.kind.icon,
                                 name: share.asset.name,
-                                caption:
-                                    '${percentLabel(share.ratio)} · ${share.asset.kind.label}',
+                                caption: [
+                                  percentLabel(share.ratio),
+                                  share.asset.kind.label,
+                                  if (share.asset.monthlyBudget > 0)
+                                    'report.budget_usage'.tr(
+                                      args: [
+                                        percentLabel(
+                                          budgetUsage(
+                                            share.amount,
+                                            share.asset.monthlyBudget,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                ].join(' · '),
                                 amount: share.amount,
                                 ratio: share.ratio,
                                 color: shareColorAt(colors, index),
