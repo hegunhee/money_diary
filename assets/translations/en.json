@@ -130,7 +130,6 @@
       "10000": "+10K",
       "50000": "+50K"
     },
-    "amount_reset": "Reset",
     "amount_delete": "Delete a digit",
     "date": "Date & time",
     "asset_label": {
