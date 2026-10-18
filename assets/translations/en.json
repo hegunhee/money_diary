@@ -213,6 +213,8 @@
     "budget": "Monthly spending budget",
     "budget_unset": "Not set",
     "budget_hint": "Leave it empty and save to turn the budget off.",
+    "asset_budgets": "Budget by asset",
+    "asset_budgets_hint": "Set how much to spend from each asset per month. Leave it empty to skip.",
     "assets": "Accounts",
     "net_worth": "Net worth",
     "hide_amount": "Hide amounts",

@@ -28,6 +28,7 @@ class AssetAccount {
     required this.name,
     required this.kind,
     required this.balance,
+    this.monthlyBudget = 0,
   });
 
   factory AssetAccount.fromJson(Map<String, dynamic> json) => AssetAccount(
@@ -35,6 +36,7 @@ class AssetAccount {
     name: json['name'] as String,
     kind: AssetKind.values.byName(json['kind'] as String),
     balance: json['balance'] as int,
+    monthlyBudget: json['monthlyBudget'] as int? ?? 0,
   );
 
   final String id;
@@ -46,13 +48,30 @@ class AssetAccount {
   /// 잔액(원). 신용카드·간편결제는 결제 예정 금액입니다.
   final int balance;
 
-  AssetAccount withBalance(int balance) =>
-      AssetAccount(id: id, name: name, kind: kind, balance: balance);
+  /// 이 자산으로 한 달에 쓸 지출 예산(원). 정하지 않았으면 0입니다.
+  final int monthlyBudget;
+
+  AssetAccount withBalance(int balance) => AssetAccount(
+    id: id,
+    name: name,
+    kind: kind,
+    balance: balance,
+    monthlyBudget: monthlyBudget,
+  );
+
+  AssetAccount withMonthlyBudget(int monthlyBudget) => AssetAccount(
+    id: id,
+    name: name,
+    kind: kind,
+    balance: balance,
+    monthlyBudget: monthlyBudget,
+  );
 
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,
     'kind': kind.name,
     'balance': balance,
+    'monthlyBudget': monthlyBudget,
   };
 }

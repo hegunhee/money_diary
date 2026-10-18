@@ -213,6 +213,8 @@
     "budget": "한 달 지출 예산",
     "budget_unset": "정하지 않음",
     "budget_hint": "비워 두고 저장하면 예산을 쓰지 않습니다.",
+    "asset_budgets": "자산별 예산",
+    "asset_budgets_hint": "자산마다 한 달에 쓸 금액을 따로 정할 수 있어요. 비워 두면 정하지 않아요.",
     "assets": "자산",
     "net_worth": "총 순자산",
     "hide_amount": "금액 숨기기",

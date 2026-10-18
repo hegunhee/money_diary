@@ -155,8 +155,13 @@ class LedgerRepository {
     await (await _box(_categories)).delete(id);
   }
 
-  /// 한 달 지출 예산을 저장합니다.
-  Future<void> saveMonthlyBudget(int budget) async {
-    await (await Hive.openBox<Object>(_settings)).put(_monthlyBudget, budget);
+  /// 한 달 지출 예산과, 자산별 예산이 바뀐 자산을 함께 저장합니다.
+  Future<void> saveBudgets(int monthlyBudget, List<AssetAccount> assets) async {
+    await (await Hive.openBox<Object>(
+      _settings,
+    )).put(_monthlyBudget, monthlyBudget);
+    await (await _box(_assets)).putAll({
+      for (final asset in assets) asset.id: asset.toJson(),
+    });
   }
 }

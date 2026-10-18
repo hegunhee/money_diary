@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money_diary/core/themes/app_colors.dart';
 import 'package:money_diary/core/themes/app_spacing.dart';
 import 'package:money_diary/core/themes/app_typography.dart';
+import 'package:money_diary/features/settings/widgets/asset_budget_row.dart';
 import 'package:money_diary/features/settings/widgets/asset_reorderable_list.dart';
 import 'package:money_diary/features/settings/widgets/budget_edit_sheet.dart';
 import 'package:money_diary/features/settings/widgets/net_worth_card.dart';
@@ -95,148 +96,187 @@ class SettingsScreen extends HookConsumerWidget {
           message: 'common.load_failed'.tr(),
           onRetry: () => ref.invalidate(ledgerProvider),
         ),
-        data: (book) => AppContentWidth(
-          child: CustomScrollView(
-            slivers: [
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.gutter,
-                  AppSpacing.gutter,
-                  AppSpacing.gutter,
-                  0,
-                ),
-                sliver: SliverList.list(
-                  children: [
-                    AppCard(
-                      padding: EdgeInsets.zero,
-                      child: AppTapRow(
-                        onTap: () => showAppSheet<void>(
-                          context,
-                          title: 'settings.budget'.tr(),
-                          child: BudgetEditSheet(
-                            monthlyBudget: book.monthlyBudget,
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(AppSpacing.lg),
-                          child: Row(
-                            children: [
-                              Icon(Icons.tune, size: 20, color: colors.primary),
-                              const SizedBox(width: AppSpacing.md),
-                              Expanded(
-                                child: Text(
-                                  'settings.budget'.tr(),
-                                  style: AppTypography.bodyLg.copyWith(
-                                    color: colors.textPrimary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                book.monthlyBudget > 0
-                                    ? wonSymbolLabel(book.monthlyBudget)
-                                    : 'settings.budget_unset'.tr(),
-                                style: AppTypography.amountMd.copyWith(
-                                  color: book.monthlyBudget > 0
-                                      ? colors.textPrimary
-                                      : colors.textSecondary,
-                                ),
-                              ),
-                              Icon(
-                                Icons.chevron_right,
-                                size: 20,
-                                color: colors.textSecondary,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.xl),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'settings.assets'.tr(),
-                            style: AppTypography.headlineSm.copyWith(
-                              color: colors.textPrimary,
-                            ),
-                          ),
-                        ),
-                        TextButton.icon(
-                          onPressed: editAsset,
-                          icon: const Icon(Icons.add, size: 18),
-                          label: Text('settings.asset_add'.tr()),
-                        ),
-                      ],
-                    ),
-                    NetWorthCard(
-                      assets: book.assets,
-                      monthlyChange: totalsOf(
-                        entriesInMonth(book.entries, today),
-                      ).net,
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    if (book.assets.isNotEmpty) ...[
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
+        data: (book) {
+          final thisMonth = entriesInMonth(book.entries, today);
+          final budgeted = [
+            for (final asset in book.assets)
+              if (asset.monthlyBudget > 0) asset,
+          ];
+          return AppContentWidth(
+            child: CustomScrollView(
+              slivers: [
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.gutter,
+                    AppSpacing.gutter,
+                    AppSpacing.gutter,
+                    0,
+                  ),
+                  sliver: SliverList.list(
+                    children: [
+                      AppCard(
+                        padding: EdgeInsets.zero,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            AppFilterChip(
-                              label: 'settings.asset_tab_all'.tr(),
-                              selected: kind.value == null,
-                              onTap: () => kind.value = null,
+                            AppTapRow(
+                              onTap: () => showAppSheet<void>(
+                                context,
+                                title: 'settings.budget'.tr(),
+                                child: BudgetEditSheet(
+                                  monthlyBudget: book.monthlyBudget,
+                                  assets: book.assets,
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(AppSpacing.lg),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.tune,
+                                      size: 20,
+                                      color: colors.primary,
+                                    ),
+                                    const SizedBox(width: AppSpacing.md),
+                                    Expanded(
+                                      child: Text(
+                                        'settings.budget'.tr(),
+                                        style: AppTypography.bodyLg.copyWith(
+                                          color: colors.textPrimary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      book.monthlyBudget > 0
+                                          ? wonSymbolLabel(book.monthlyBudget)
+                                          : 'settings.budget_unset'.tr(),
+                                      style: AppTypography.amountMd.copyWith(
+                                        color: book.monthlyBudget > 0
+                                            ? colors.textPrimary
+                                            : colors.textSecondary,
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.chevron_right,
+                                      size: 20,
+                                      color: colors.textSecondary,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                            for (final item in AssetKind.values) ...[
-                              const SizedBox(width: AppSpacing.sm),
-                              AppFilterChip(
-                                label: item.label,
-                                selected: item == kind.value,
-                                onTap: () => kind.value = item,
+                            if (budgeted.isNotEmpty) ...[
+                              Divider(
+                                height: 1,
+                                color: colors.divider.withValues(alpha: 0.3),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(AppSpacing.lg),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    for (final (index, asset)
+                                        in budgeted.indexed) ...[
+                                      if (index > 0)
+                                        const SizedBox(height: AppSpacing.md),
+                                      AssetBudgetRow(
+                                        asset: asset,
+                                        spent: assetSpent(thisMonth, asset.id),
+                                      ),
+                                    ],
+                                  ],
+                                ),
                               ),
                             ],
                           ],
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.md),
-                    ],
-                    if (!book.assets.any(inTab))
-                      AppCard(
-                        child: Text(
-                          book.assets.isEmpty
-                              ? 'settings.assets_empty'.tr()
-                              : 'settings.asset_tab_empty'.tr(),
-                          textAlign: TextAlign.center,
-                          style: AppTypography.bodyMd.copyWith(
-                            color: colors.textSecondary,
+                      const SizedBox(height: AppSpacing.xl),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'settings.assets'.tr(),
+                              style: AppTypography.headlineSm.copyWith(
+                                color: colors.textPrimary,
+                              ),
+                            ),
+                          ),
+                          TextButton.icon(
+                            onPressed: editAsset,
+                            icon: const Icon(Icons.add, size: 18),
+                            label: Text('settings.asset_add'.tr()),
+                          ),
+                        ],
+                      ),
+                      NetWorthCard(
+                        assets: book.assets,
+                        monthlyChange: totalsOf(thisMonth).net,
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      if (book.assets.isNotEmpty) ...[
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              AppFilterChip(
+                                label: 'settings.asset_tab_all'.tr(),
+                                selected: kind.value == null,
+                                onTap: () => kind.value = null,
+                              ),
+                              for (final item in AssetKind.values) ...[
+                                const SizedBox(width: AppSpacing.sm),
+                                AppFilterChip(
+                                  label: item.label,
+                                  selected: item == kind.value,
+                                  onTap: () => kind.value = item,
+                                ),
+                              ],
+                            ],
                           ),
                         ),
-                      ),
-                  ],
-                ),
-              ),
-              if (book.assets.any(inTab))
-                SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.gutter,
-                    0,
-                    AppSpacing.gutter,
-                    AppSpacing.gutter,
+                        const SizedBox(height: AppSpacing.md),
+                      ],
+                      if (!book.assets.any(inTab))
+                        AppCard(
+                          child: Text(
+                            book.assets.isEmpty
+                                ? 'settings.assets_empty'.tr()
+                                : 'settings.asset_tab_empty'.tr(),
+                            textAlign: TextAlign.center,
+                            style: AppTypography.bodyMd.copyWith(
+                              color: colors.textSecondary,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
-                  sliver: AssetReorderableList(
-                    assets: book.assets.where(inTab).toList(),
-                    onTap: editAsset,
-                    onDelete: deleteAsset,
-                    onReorder: (from, to) => reorderAsset(book, from, to),
-                  ),
-                )
-              else
-                const SliverPadding(
-                  padding: EdgeInsets.only(bottom: AppSpacing.gutter),
                 ),
-            ],
-          ),
-        ),
+                if (book.assets.any(inTab))
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.gutter,
+                      0,
+                      AppSpacing.gutter,
+                      AppSpacing.gutter,
+                    ),
+                    sliver: AssetReorderableList(
+                      assets: book.assets.where(inTab).toList(),
+                      onTap: editAsset,
+                      onDelete: deleteAsset,
+                      onReorder: (from, to) => reorderAsset(book, from, to),
+                    ),
+                  )
+                else
+                  const SliverPadding(
+                    padding: EdgeInsets.only(bottom: AppSpacing.gutter),
+                  ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

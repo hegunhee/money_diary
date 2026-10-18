@@ -67,6 +67,7 @@ class AssetEditSheet extends HookConsumerWidget {
               name: name.text.trim(),
               kind: kind.value,
               balance: parseWon(balance.text),
+              monthlyBudget: editing?.monthlyBudget ?? 0,
             ),
           );
       return null;
