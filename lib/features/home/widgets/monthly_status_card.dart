@@ -9,6 +9,7 @@ import 'package:money_diary/shared/util/ledger_labels.dart';
 import 'package:money_diary/shared/util/won_format.dart';
 import 'package:money_diary/shared/widgets/app_badge.dart';
 import 'package:money_diary/shared/widgets/app_card.dart';
+import 'package:money_diary/shared/widgets/app_press_scale.dart';
 
 /// 한 달의 수입·지출·모은 돈을 요약하는 카드
 class MonthlyStatusCard extends StatelessWidget {
@@ -16,6 +17,8 @@ class MonthlyStatusCard extends StatelessWidget {
     required this.month,
     required this.totals,
     required this.monthlyBudget,
+    required this.onIncomeTap,
+    required this.onExpenseTap,
     this.dayOfMonth,
     super.key,
   });
@@ -25,6 +28,12 @@ class MonthlyStatusCard extends StatelessWidget {
   final LedgerTotals totals;
 
   final int monthlyBudget;
+
+  /// 총 수입을 눌렀을 때. 수입만 걸러 봅니다.
+  final VoidCallback onIncomeTap;
+
+  /// 총 지출을 눌렀을 때. 지출만 걸러 봅니다.
+  final VoidCallback onExpenseTap;
 
   /// 이번 달의 며칠째인지. 이번 달을 보고 있지 않으면 null입니다.
   final int? dayOfMonth;
@@ -72,6 +81,7 @@ class MonthlyStatusCard extends StatelessWidget {
                   icon: Icons.arrow_downward,
                   color: colors.income,
                   tint: colors.incomeTint,
+                  onTap: onIncomeTap,
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
@@ -91,6 +101,7 @@ class MonthlyStatusCard extends StatelessWidget {
                   icon: Icons.arrow_upward,
                   color: colors.expense,
                   tint: colors.expenseTint,
+                  onTap: onExpenseTap,
                 ),
               ),
             ],
@@ -146,6 +157,7 @@ class _FlowTile extends StatelessWidget {
     required this.icon,
     required this.color,
     required this.tint,
+    required this.onTap,
   });
 
   final String label;
@@ -154,63 +166,70 @@ class _FlowTile extends StatelessWidget {
   final IconData icon;
   final Color color;
   final Color tint;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colors.surfaceLow,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Semantics(
+      button: true,
+      child: AppPressScale(
+        onTap: onTap,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: colors.surfaceLow,
+            borderRadius: BorderRadius.circular(AppRadius.md),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  label,
-                  style: AppTypography.labelMd.copyWith(
-                    color: colors.textSecondary,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      label,
+                      style: AppTypography.labelMd.copyWith(
+                        color: colors.textSecondary,
+                      ),
+                    ),
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: tint,
+                        shape: BoxShape.circle,
+                      ),
+                      child: SizedBox.square(
+                        dimension: 20,
+                        child: Icon(icon, size: 14, color: color),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'common.won'.tr(args: [amount]),
+                    style: AppTypography.amountLg.copyWith(
+                      color: color,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: tint,
-                    shape: BoxShape.circle,
-                  ),
-                  child: SizedBox.square(
-                    dimension: 20,
-                    child: Icon(icon, size: 14, color: color),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  caption,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.labelSm.copyWith(
+                    color: colors.textSecondary,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: AppSpacing.xs),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'common.won'.tr(args: [amount]),
-                style: AppTypography.amountLg.copyWith(
-                  color: color,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              caption,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.labelSm.copyWith(
-                color: colors.textSecondary,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

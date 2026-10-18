@@ -6,6 +6,7 @@ import 'package:money_diary/core/themes/app_colors.dart';
 import 'package:money_diary/core/themes/app_spacing.dart';
 import 'package:money_diary/core/themes/app_typography.dart';
 import 'package:money_diary/features/entry/screens/entry_screen.dart';
+import 'package:money_diary/features/history/controllers/history_filter_controller.dart';
 import 'package:money_diary/features/history/models/ledger_filter.dart';
 import 'package:money_diary/features/history/widgets/daily_ledger_section.dart';
 import 'package:money_diary/features/history/widgets/history_summary_card.dart';
@@ -26,7 +27,7 @@ class HistoryScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
-    final filter = useState(LedgerFilter.all);
+    final filter = ref.watch(historyFilterProvider);
     final newestFirst = useState(true);
     final ledger = ref.watch(ledgerProvider);
     final month = ref.watch(selectedMonthProvider);
@@ -49,7 +50,7 @@ class HistoryScreen extends HookConsumerWidget {
         ),
         data: (book) {
           final monthEntries = entriesInMonth(book.entries, month);
-          final shown = monthEntries.where(filter.value.matches).toList();
+          final shown = monthEntries.where(filter.matches).toList();
           final days = groupByDay(shown);
           final streak = recordStreak(book.entries, today);
           return AppContentWidth(
@@ -89,8 +90,10 @@ class HistoryScreen extends HookConsumerWidget {
                           icon: item == LedgerFilter.project
                               ? Icons.folder_outlined
                               : null,
-                          selected: item == filter.value,
-                          onTap: () => filter.value = item,
+                          selected: item == filter,
+                          onTap: () => ref
+                              .read(historyFilterProvider.notifier)
+                              .select(item),
                         ),
                       ],
                     ],
